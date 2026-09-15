@@ -1,0 +1,17 @@
+create extension if not exists pgcrypto;
+create table if not exists public.organizations (id uuid primary key default gen_random_uuid(), owner_id uuid not null unique references auth.users(id) on delete cascade, name text not null default 'Travo Vista Group', created_at timestamptz not null default now());
+create table if not exists public.app_data (org_id uuid primary key references public.organizations(id) on delete cascade, data jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now());
+alter table public.organizations enable row level security;
+alter table public.app_data enable row level security;
+drop policy if exists "org owner can read own org" on public.organizations;
+drop policy if exists "user can create own org" on public.organizations;
+drop policy if exists "org owner can update own org" on public.organizations;
+create policy "org owner can read own org" on public.organizations for select using (owner_id = auth.uid());
+create policy "user can create own org" on public.organizations for insert with check (owner_id = auth.uid());
+create policy "org owner can update own org" on public.organizations for update using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "org owner can read data" on public.app_data;
+drop policy if exists "org owner can insert data" on public.app_data;
+drop policy if exists "org owner can update data" on public.app_data;
+create policy "org owner can read data" on public.app_data for select using (exists (select 1 from public.organizations o where o.id = app_data.org_id and o.owner_id = auth.uid()));
+create policy "org owner can insert data" on public.app_data for insert with check (exists (select 1 from public.organizations o where o.id = app_data.org_id and o.owner_id = auth.uid()));
+create policy "org owner can update data" on public.app_data for update using (exists (select 1 from public.organizations o where o.id = app_data.org_id and o.owner_id = auth.uid())) with check (exists (select 1 from public.organizations o where o.id = app_data.org_id and o.owner_id = auth.uid()));
