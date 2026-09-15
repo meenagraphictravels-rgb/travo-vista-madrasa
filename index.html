@@ -45,7 +45,14 @@ Object.assign(T.ur,{settings:'مدرسہ سیٹنگز',results:'نتائج / م�
 Object.assign(T.hi,{settings:'मदरसा सेटिंग्स'});
 let lang=localStorage.getItem('tv_lang')||'en',page='dashboard';let pageHistory=['dashboard'];const t=k=>T[lang][k]||k;const get=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x==null?d:x}catch{return d}};
 let __tvAutoBackupTimer=null,__tvRemoteTimer=null,__tvOrgId=localStorage.getItem('tv_org_id')||null,__tvSupabase=null;
-const __tvCloudKeys=Object.values(keys).filter(k=>!['tv_current_user','tv_auth'].includes(k));
+let __tvCloudKeys=[];
+
+const keys={
+  ...
+};
+
+__tvCloudKeys=Object.values(keys).filter(k=>!['tv_current_user','tv_auth'].includes(k));
+
 function tvCloudReady(){return !!(__tvSupabase&&__tvOrgId)}
 function collectCloudData(){const data={};__tvCloudKeys.forEach(k=>{const raw=localStorage.getItem(k);if(raw!==null){try{data[k]=JSON.parse(raw)}catch{data[k]=raw}}});return data}
 async function tvSyncNow(){if(!tvCloudReady())return;try{const {error}=await __tvSupabase.from('app_data').upsert({org_id:__tvOrgId,data:collectCloudData(),updated_at:new Date().toISOString()},{onConflict:'org_id'});if(error)throw error}catch(e){console.warn('Cloud sync failed:',e)}}
