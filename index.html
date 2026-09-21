@@ -2,7 +2,231 @@
 <html lang="en"><head>
 <link rel="icon" href="favicon.ico" type="image/x-icon"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Travo Vista Group - Madrasa Management System</title>
 <style>
-:root{--blue:#14532d;--blue2:#15803d;--navy:#064e3b;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#687386;--border:#e2e7ef;--green:#16834d;--red:#c62828;--amber:#b56b00}*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}.app{min-height:100vh}.sidebar{position:fixed;z-index:5;inset:0 auto 0 0;width:260px;background:linear-gradient(180deg,#064e3b,#022c22);color:#fff;padding:18px 13px;overflow:auto}.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.16)}.brand img{width:43px;height:43px;object-fit:contain;background:#fff;border-radius:10px}.brand b{display:block;font-size:15px}.brand span{font-size:11px;opacity:.72}.nav{margin-top:15px}.nav button{width:100%;border:0;background:transparent;color:#dbeafe;text-align:left;padding:10px 12px;border-radius:9px;margin:2px 0;cursor:pointer}.nav button:hover,.nav button.active{background:rgba(255,255,255,.14);color:#fff}.main{margin-left:260px;padding:22px 28px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.top h1{margin:0;font-size:25px}.muted{color:var(--muted);font-size:13px}.lang select{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 4px 18px rgba(20,35,60,.05)}.stat{font-size:28px;font-weight:700;margin-top:7px}.section{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:19px;box-shadow:0 4px 18px rgba(20,35,60,.035)}.section h2{margin:0;font-size:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.field label{display:block;font-size:12px;font-weight:650;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #d5dce6;border-radius:8px;outline:none;background:#fff}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6c9ddd;box-shadow:0 0 0 3px rgba(21,101,192,.08)}.field textarea{min-height:82px;resize:vertical}.actions{display:flex;gap:9px;margin-top:15px}.primary,.secondary,.danger{border:0;padding:9px 14px;border-radius:8px;cursor:pointer}.primary{background:var(--blue2);color:#fff}.secondary{background:#edf3fc;color:var(--blue)}.danger{background:#fdecec;color:var(--red)}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--border);font-size:13px;text-align:left;white-space:nowrap}.table th{font-size:12px;color:#566174;background:#fafbfd}.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:11px}.activeBadge{background:#e8f7ef;color:var(--green)}.inactiveBadge{background:#f2f3f5;color:#666}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}.search{min-width:260px;padding:10px 12px;border:1px solid var(--border);border-radius:8px}.empty{text-align:center;padding:30px;color:var(--muted)}.modal{position:fixed;z-index:20;inset:0;background:rgba(5,20,45,.46);display:flex;align-items:center;justify-content:center;padding:20px}.modalBox{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.22)}.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#f1f3f6;border-radius:50%;width:34px;height:34px;cursor:pointer}.hidden{display:none}.userBadge{display:flex;align-items:center;gap:8px}.logout{border:0;background:#fdecec;color:#c62828;padding:8px 11px;border-radius:8px;cursor:pointer}.logoPreview{width:82px;height:82px;border:1px dashed #bbb;border-radius:10px;object-fit:contain;background:#fafafa}.logoRow{display:flex;align-items:center;gap:15px}.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.info .card{padding:14px}.rtl{direction:rtl}.rtl .sidebar{left:auto;right:0}.rtl .main{margin-left:0;margin-right:260px}.rtl .nav button,.rtl .table th,.rtl .table td{text-align:right}.rtl .toolbar{direction:rtl}.toast{position:fixed;right:22px;bottom:22px;z-index:30;background:#172033;color:#fff;padding:11px 15px;border-radius:9px;box-shadow:0 8px 30px rgba(0,0,0,.18)}@media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}.grid,.info{grid-template-columns:1fr 1fr}}@media(max-width:760px){.sidebar{width:215px}.main{margin-left:215px;padding:16px}.rtl .main{margin-right:215px}.cards,.grid,.info{grid-template-columns:1fr}.search{min-width:100%}}
+:root{--blue:#14532d;--blue2:#15803d;--navy:#064e3b;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#687386;--border:#e2e7ef;--green:#16834d;--red:#c62828;--amber:#b56b00}*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}.app{min-height:100vh}.sidebar{position:fixed;z-index:5;inset:0 auto 0 0;width:260px;background:linear-gradient(180deg,#064e3b,#022c22);color:#fff;padding:18px 13px;overflow:auto}.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.16)}.brand img{width:43px;height:43px;object-fit:contain;background:#fff;border-radius:10px}.brand b{display:block;font-size:15px}.brand span{font-size:11px;opacity:.72}.nav{margin-top:15px}.nav button{width:100%;border:0;background:transparent;color:#dbeafe;text-align:left;padding:10px 12px;border-radius:9px;margin:2px 0;cursor:pointer}.nav button:hover,.nav button.active{background:rgba(255,255,255,.14);color:#fff}.main{margin-left:260px;padding:22px 28px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.top h1{margin:0;font-size:25px}.muted{color:var(--muted);font-size:13px}.lang select{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 4px 18px rgba(20,35,60,.05)}.stat{font-size:28px;font-weight:700;margin-top:7px}.section{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:19px;box-shadow:0 4px 18px rgba(20,35,60,.035)}.section h2{margin:0;font-size:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.field label{display:block;font-size:12px;font-weight:650;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #d5dce6;border-radius:8px;outline:none;background:#fff}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6c9ddd;box-shadow:0 0 0 3px rgba(21,101,192,.08)}.field textarea{min-height:82px;resize:vertical}.actions{display:flex;gap:9px;margin-top:15px}.primary,.secondary,.danger{border:0;padding:9px 14px;border-radius:8px;cursor:pointer}.primary{background:var(--blue2);color:#fff}.secondary{background:#edf3fc;color:var(--blue)}.danger{background:#fdecec;color:var(--red)}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--border);font-size:13px;text-align:left;white-space:nowrap}.table th{font-size:12px;color:#566174;background:#fafbfd}.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:11px}.activeBadge{background:#e8f7ef;color:var(--green)}.inactiveBadge{background:#f2f3f5;color:#666}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}.search{min-width:260px;padding:10px 12px;border:1px solid var(--border);border-radius:8px}.empty{text-align:center;padding:30px;color:var(--muted)}.modal{position:fixed;z-index:20;inset:0;background:rgba(5,20,45,.46);display:flex;align-items:center;justify-content:center;padding:20px}.modalBox{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.22)}.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#f1f3f6;border-radius:50%;width:34px;height:34px;cursor:pointer}.hidden{display:none}.userBadge{display:flex;align-items:center;gap:8px}.logout{border:0;background:#fdecec;color:#c62828;padding:8px 11px;border-radius:8px;cursor:pointer}.logoPreview{width:82px;height:82px;border:1px dashed #bbb;border-radius:10px;object-fit:contain;background:#fafafa}.logoRow{display:flex;align-items:center;gap:15px}.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.info .card{padding:14px}.rtl{direction:rtl}.rtl .sidebar{left:auto;right:0}.rtl .main{margin-left:0;margin-right:260px}.rtl .nav button,.rtl .table th,.rtl .table td{text-align:right}.rtl .toolbar{direction:rtl}.toast{position:fixed;right:22px;bottom:22px;z-index:30;background:#172033;color:#fff;padding:11px 15px;border-radius:9px;box-shadow:0 8px 30px rgba(0,0,0,.18)}@media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}.grid,.info{grid-template-columns:1fr 1fr}}
+/* ===== PREMIUM MOBILE HAMBURGER SIDEBAR ===== */
+
+.mobileMenuBtn{
+  display:none;
+}
+
+.mobileSidebarOverlay{
+  display:none;
+}
+
+@media(max-width:760px){
+
+  .main{
+    margin-left:0 !important;
+    margin-right:0 !important;
+    padding:56px 10px 16px !important;
+    width:100%;
+    min-width:0;
+  }
+
+  .sidebar{
+    width:235px !important;
+    max-width:78vw;
+    transform:translateX(-110%);
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+    z-index:1001;
+    box-shadow:8px 0 28px rgba(0,0,0,.25);
+  }
+
+  .sidebar.mobile-open{
+    transform:translateX(0);
+  }
+
+  body.rtl .sidebar{
+    left:auto;
+    right:0;
+    transform:translateX(110%);
+  }
+
+  body.rtl .sidebar.mobile-open{
+    transform:translateX(0);
+  }
+
+  .mobileMenuBtn{
+    display:flex;
+    position:fixed;
+    top:10px;
+    left:10px;
+    width:38px;
+    height:38px;
+    z-index:1002;
+    border:0;
+    border-radius:9px;
+    background:#064e3b;
+    color:#fff;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:4px;
+    cursor:pointer;
+    box-shadow:0 3px 12px rgba(0,0,0,.20);
+    padding:0;
+  }
+
+  .mobileMenuBtn span{
+    display:block;
+    width:19px;
+    height:2px;
+    background:#fff;
+    border-radius:2px;
+  }
+
+  body.rtl .mobileMenuBtn{
+    left:auto;
+    right:10px;
+  }
+
+  .mobileSidebarOverlay{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(15,23,42,.48);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+
+  .mobileSidebarOverlay.show{
+    display:block;
+  }
+
+  .top{
+    flex-direction:column;
+    align-items:stretch;
+    gap:9px;
+    margin-bottom:12px;
+  }
+
+  .top h1{
+    font-size:21px;
+    line-height:1.2;
+    padding-right:90px;
+  }
+
+  .userBadge{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    position:relative;
+  }
+
+  .userBadge button{
+    width:100%;
+    min-width:0;
+    font-size:11px;
+    padding:8px 6px;
+    border-radius:9px;
+  }
+
+  .userBadge .mini{
+    width:100%;
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:11px;
+    align-self:center;
+  }
+
+  .userBadge select{
+    position:fixed;
+    top:10px;
+    right:10px;
+    z-index:1002;
+    width:92px !important;
+    min-width:92px !important;
+    height:38px;
+    padding:6px 8px;
+    font-size:11px;
+    border-radius:9px;
+    background:#fff;
+  }
+
+  body.rtl .userBadge select{
+    right:auto;
+    left:10px;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns:1fr !important;
+    width:100%;
+    gap:10px;
+  }
+
+  .card{
+    width:100%;
+    min-width:0;
+    padding:15px;
+    border-radius:14px;
+  }
+
+  .stat{
+    font-size:25px;
+  }
+
+  .grid,
+  .info{
+    grid-template-columns:1fr !important;
+    width:100%;
+  }
+
+  .section{
+    width:100%;
+    padding:13px;
+    border-radius:14px;
+  }
+
+  .tablewrap{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .table{
+    min-width:650px;
+  }
+
+  .search{
+    width:100%;
+    min-width:0 !important;
+  }
+
+  .actions{
+    flex-wrap:wrap;
+  }
+
+  .actions button{
+    flex:1 1 120px;
+  }
+
+  .modal{
+    padding:8px;
+  }
+
+  .modalBox{
+    width:100%;
+    max-height:94vh;
+    padding:15px;
+    border-radius:14px;
+  }
+
+  .authOverlay{
+    padding:10px;
+  }
+
+  .authBox{
+    width:100%;
+    max-height:95vh;
+    overflow-y:auto;
+    padding:20px;
+    border-radius:14px;
+  }
+}
 .attendanceMatrix .table{min-width:max-content}.attendanceMatrix .table th,.attendanceMatrix .table td{padding:7px 8px;text-align:center}.attendanceMatrix .table th:nth-child(2),.attendanceMatrix .table th:nth-child(3),.attendanceMatrix .table th:nth-child(4),.attendanceMatrix .table td:nth-child(2),.attendanceMatrix .table td:nth-child(3),.attendanceMatrix .table td:nth-child(4){text-align:left;position:sticky;left:0;background:var(--card);z-index:2}.attendanceMatrix .table th:nth-child(2){left:0}.attendanceMatrix .table th:nth-child(3){left:100px}.attendanceMatrix .table th:nth-child(4){left:250px}.attCell{font-weight:800;min-width:32px}.attP{background:#e7f8ef!important;color:#07844b}.attA{background:#ffe8eb!important;color:#d61f45}.attL{background:#e6f3ff!important;color:#0875b9}.attBlank{color:#c7ced8}.pHead{background:#dff7ea!important;color:#07844b}.aHead{background:#ffe4e8!important;color:#d61f45}.lHead{background:#e2f2ff!important;color:#0875b9}.money{font-variant-numeric:tabular-nums}.right{text-align:right!important}.mini{font-size:11px;color:var(--muted)}.printOnly{display:none}.receipt{max-width:760px;margin:auto;border:1px solid #ccd5e2;padding:28px;background:#fff}.receiptHead{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid var(--blue);padding-bottom:14px}.receiptHead img{width:70px;height:70px;object-fit:contain}.receiptTitle{text-align:center;flex:1}.receiptTitle h1{margin:0;font-size:22px}.receiptTitle p{margin:3px 0;color:#657083;font-size:12px}.receiptGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:18px 0}.receiptTable{width:100%;border-collapse:collapse}.receiptTable th,.receiptTable td{border:1px solid #ccd5e2;padding:9px}.receiptTotal{margin-top:14px;text-align:right;font-size:18px;font-weight:700}.signatureBox{margin-top:35px;display:flex;justify-content:flex-end}.signatureBox img{max-width:130px;max-height:55px;object-fit:contain}.nowrap{white-space:nowrap}@media print{body{background:#fff}.sidebar,.top,#modal,#toast{display:none!important}.main{margin:0!important;padding:0}.printOnly{display:block!important}.noPrint{display:none!important}.receipt{border:0;max-width:none}} body.dark{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--border:#263244}body.dark .section,body.dark .card,body.dark .modalBox{background:#111827;border-color:#263244}body.dark .field input,body.dark .field select,body.dark .field textarea,body.dark .lang select{background:#0b1220;color:#e5e7eb;border-color:#334155}body.dark .table th{background:#0b1220;color:#cbd5e1}.importBox{border:1px dashed #b8c4d6;border-radius:10px;padding:14px;background:#f8fafc}.importHelp{font-size:12px;color:var(--muted);line-height:1.5}.themeToggle{border:0;border-radius:20px;padding:8px 12px;cursor:pointer;background:#e9eef7;color:#173b73}.dark .themeToggle{background:#1e293b;color:#fde68a}.importResult{margin-top:10px;padding:10px;border-radius:8px;background:#eef5ff;color:#173b73;font-size:12px}.reportSwitch{display:flex;gap:8px;align-items:center}.reportSwitch button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer}.reportSwitch button.active{background:var(--blue2);color:#fff;border-color:var(--blue2)}.authOverlay{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#071f4a,#0b4aa2);display:flex;align-items:center;justify-content:center;padding:20px}.authOverlay.hidden{display:none}.authBox{width:min(460px,100%);background:#fff;border-radius:18px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.28)}.authBrand{text-align:center;margin-bottom:20px}.authBrand img{width:62px;height:62px;object-fit:contain;border-radius:14px}.authBrand h2{margin:10px 0 5px}.authTabs{display:flex;justify-content:center;margin-bottom:18px}.authTabs button{border:0;background:#eaf1fb;color:#0b4aa2;padding:8px 18px;border-radius:20px;font-weight:700}.authError{min-height:20px;color:#c62828;font-size:12px;margin-top:10px}.authHint{font-size:11px;color:#687386;text-align:center;margin-top:12px}body.dark .authBox{background:#111827;color:#e5e7eb} .marksheet{background:#fff;color:#172033;max-width:900px;margin:auto;padding:26px;border:2px solid #173b73;font-family:Arial,sans-serif}.msTop{display:grid;grid-template-columns:90px 1fr auto;gap:14px;align-items:center;border-bottom:3px solid #173b73;padding-bottom:14px}.msLogo img{width:78px;height:78px;object-fit:contain}.msSchool{text-align:center}.msSchool h1{margin:0 0 5px;font-size:27px;color:#173b73}.msSchool div{font-size:12px}.msBoard{font-weight:700;margin-top:4px}.msTitle{text-align:center;border:1px solid #173b73;padding:9px 14px;display:flex;flex-direction:column;gap:4px}.msTitle b{font-size:17px}.msTitle span{font-size:12px}.msStudent{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #cbd5e1;border-bottom:0;margin-top:16px}.msStudent div{display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #cbd5e1;padding:8px}.msStudent div:nth-child(odd){border-right:1px solid #cbd5e1}.msStudent b{font-size:11px}.msStudent span{font-size:12px}.msTable{width:100%;border-collapse:collapse;margin-top:16px}.msTable th,.msTable td{border:1px solid #9aa8bb;padding:8px;text-align:center;font-size:12px}.msTable th:first-child,.msTable td:first-child{text-align:left}.msTable thead th{background:#eaf1fb}.msTable tfoot th{background:#f2f5f9}.msSummary{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #cbd5e1;margin-top:16px}.msSummary div{padding:10px;text-align:center;border-right:1px solid #cbd5e1}.msSummary div:last-child{border-right:0}.msSummary b,.msSummary strong{display:block}.msSummary b{font-size:10px}.msSummary strong{font-size:15px;margin-top:4px}.msFooter{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;text-align:center;margin-top:48px;font-size:11px}.msFooter img{max-width:120px;max-height:45px;object-fit:contain}.msFooter span{display:inline-block;border-top:1px solid #555;padding-top:4px;margin-top:22px;min-width:120px}@media print{.marksheet{border:0;max-width:none;margin:0;padding:12mm;min-height:260mm}.msTop{grid-template-columns:80px 1fr auto}.msSchool h1{font-size:23px}.msTable th,.msTable td{padding:7px}.msStudent{margin-top:12px}}
 /* v2.1 Urdu + navigation polish */
 html[lang="ur"] body, body.rtl{font-family:"Noto Naskh Arabic","Noto Nastaliq Urdu","Segoe UI",Tahoma,Arial,sans-serif;}
@@ -39,7 +263,13 @@ body.theme-sunset .section,body.theme-sunset .card,body.theme-sunset .modalBox{b
 body.theme-darkgreen .field input,body.theme-darkgreen .field select,body.theme-darkgreen .field textarea,body.theme-darkgreen .lang select{background:#081a14;color:#e8f5ef;border-color:#2d5547;}
 body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
 .themeChoices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.themeChoice{border:1px solid var(--border);background:var(--card);padding:16px;border-radius:12px;text-align:left;cursor:pointer}.themeChoice:hover{border-color:var(--blue2);transform:translateY(-1px)}.themeSwatch{height:34px;border-radius:8px;margin-bottom:9px}.themeGreen{background:linear-gradient(135deg,#064e3b,#22c55e)}.themeTeal{background:linear-gradient(135deg,#115e59,#14b8a6)}.themeBlueGreen{background:linear-gradient(135deg,#166534,#0891b2)}.themeOlive{background:linear-gradient(135deg,#365314,#84cc16)}.themeDark{background:linear-gradient(135deg,#020617,#166534)}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="supabase-config.js"></script></head><body><div class="app"><aside class="sidebar"><div class="brand"><img id="appLogo" src="icon.ico"><div><b>Travo Vista Group</b><span>Madrasa Management System</span></div></div><div class="nav" id="nav"></div></aside><main class="main"><div class="top"><div><button id="backBtn" class="secondary navBackTop" onclick="backPage()" style="display:none;margin-bottom:8px">← Back</button><h1 id="pageTitle"></h1><div class="muted" id="schoolTop"></div></div><div class="userBadge"><button class="secondary" onclick="downloadBackup()">💾 Backup</button><button class="secondary" onclick="excelExportModal()">📊 Excel Export</button><span id="loggedUser" class="mini"></span><button class="secondary" onclick="myAccountModal()">👤 My Account</button><button class="logout" onclick="logout()">🚪 Logout</button><button class="themeToggle" id="themeBtn" onclick="themeModal()">🎨 Themes</button><select id="lang" onchange="setLang(this.value)"><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option></select></div></div><div id="content"></div></main></div><div id="modal" class="modal hidden"></div><div id="toast" class="toast hidden"></div><div id="authOverlay" class="authOverlay hidden"></div>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="supabase-config.js"></script></head><body><button class="mobileMenuBtn" onclick="toggleMobileSidebar()" aria-label="Open Menu">
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<div class="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div><div class="app"><aside class="sidebar"><div class="brand"><img id="appLogo" src="icon.ico"><div><b>Travo Vista Group</b><span>Madrasa Management System</span></div></div><div class="nav" id="nav"></div></aside><main class="main"><div class="top"><div><button id="backBtn" class="secondary navBackTop" onclick="backPage()" style="display:none;margin-bottom:8px">← Back</button><h1 id="pageTitle"></h1><div class="muted" id="schoolTop"></div></div><div class="userBadge"><button class="secondary" onclick="downloadBackup()">💾 Backup</button><button class="secondary" onclick="excelExportModal()">📊 Excel Export</button><span id="loggedUser" class="mini"></span><button class="secondary" onclick="myAccountModal()">👤 My Account</button><button class="logout" onclick="logout()">🚪 Logout</button><button class="themeToggle" id="themeBtn" onclick="themeModal()">🎨 Themes</button><select id="lang" onchange="setLang(this.value)"><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option></select></div></div><div id="content"></div></main></div><div id="modal" class="modal hidden"></div><div id="toast" class="toast hidden"></div><div id="authOverlay" class="authOverlay hidden"></div>
 <script>
 const T={en:{dashboard:'Dashboard',accounting:'Accounting',admin:'Administration',academic:'Academic Setup',assignments:'Subject Assignments',students:'Student Management',admission:'Admission Form',classes:'Classes & Sections',subjects:'Subjects',staff:'Staff Management',fees:'Fees Management',salary:'Salary Management',attendance:'Attendance',results:'Results / Marksheet',tc:'Transfer Certificate',reports:'Reports',mIncome:'Madrasa Income',mRaseed:'Raseedat / Receipt Books',mBoxes:'Sadaqah Boxes',mHostel:'Hostel Management',mLibrary:'Library',settings:'School Settings',studentsCount:'Total Students',staffCount:'Total Staff',classesCount:'Classes',active:'Active',inactive:'Inactive',school:'School Profile',save:'Save',cancel:'Cancel',edit:'Edit',delete:'Delete',add:'Add',search:'Search...',name:'School Name',code:'School Code',address:'Address',phone:'Phone / Mobile',email:'Email',website:'Website',board:'Board / Affiliation',principal:'Principal / Director',session:'Academic Session',logo:'School Logo',signature:'Principal Signature',admissionNo:'Admission No',studentName:'Student Name',father:'Father Name',mother:'Mother Name',guardian:'Guardian Name',class:'Class',section:'Section',roll:'Roll No',dob:'Date of Birth',contact:'Phone',status:'Status',gender:'Gender',male:'Male',female:'Female',other:'Other',blood:'Blood Group',addStudent:'Add Student',addClass:'Add Class',addSubject:'Add Subject',subjectName:'Subject Name',noSubjects:'No subjects found.',className:'Class Name',sectionName:'Section Name',capacity:'Capacity',classTeacher:'Class Teacher',addStaff:'Add Staff',employee:'Employee ID',designation:'Designation',subject:'Subject',joining:'Joining Date',salaryAmt:'Salary',qualification:'Qualification',staffName:'Staff Name',select:'Select',noStudents:'No students found.',noClasses:'No classes found.',noStaff:'No staff found.',confirmDelete:'Delete this record?',saved:'Saved successfully',placeholder:'This module will be added in the next phase.',backup:'Backup / Restore',backupData:'Backup Data',restoreData:'Restore Data',downloadBackup:'Download Backup',restoreFile:'Restore from File',backupDone:'Backup downloaded successfully',restoreDone:'Data restored successfully',reportType:'Report Type',studentReport:'Student Report',feeReport:'Fee Report',salaryReport:'Salary Report',attendanceReport:'Attendance Report',resultReport:'Result Report',tcReport:'TC Report',generateReport:'Generate Report',exportCsv:'Export CSV',printReport:'Print Report',totalCollected:'Total Collected',totalPending:'Total Pending',present:'Present',absent:'Absent',late:'Late',leave:'Leave',totalRecords:'Total Records',today:'Today',thisMonth:'This Month',backupHint:'Create a complete local backup of your school data. Keep the file in a safe place.',restoreHint:'Restore a previously exported backup. Existing local data will be replaced.',noData:'No data available.',totalFeeAmount:'Total Fee Amount',totalSalary:'Total Salary Paid',quick:'Quick Overview',configured:'Configured',notConfigured:'Not configured',feeStructure:'Fee Structure',collectFee:'Collect Fee',feeRecords:'Fee Records',receiptNo:'Receipt No',month:'Month',amount:'Amount',previousDue:'Previous Due',discount:'Discount',fine:'Fine',totalPaid:'Total Paid',paymentDate:'Payment Date',paymentMode:'Payment Mode',cash:'Cash',bank:'Bank',online:'Online',cheque:'Cheque',remarks:'Remarks',viewReceipt:'View Receipt',print:'Print',noFees:'No fee records found.',classFee:'Class Fee',monthlyFee:'Monthly Fee',annualFee:'Annual Fee',saveFee:'Save Fee Structure',salaryRecords:'Salary Records',paySalary:'Pay Salary',paymentStatus:'Payment Status',paid:'Paid',pending:'Pending',monthYear:'Month / Year',netSalary:'Net Salary',deduction:'Deduction',allowance:'Allowance',noSalary:'No salary records found.',salarySlip:'Salary Slip',generate:'Generate',selectStudent:'Select Student',selectStaff:'Select Staff',feeType:'Fee Type',tuition:'Tuition Fee',transport:'Transport Fee',exam:'Exam Fee',otherFee:'Other Fee',totalFee:'Total Fee',balance:'Balance',statusPaid:'Paid',statusPending:'Pending',duplicate:'Duplicate',shifts:'Shifts & Periods',timetable:'Timetable',teacherAttendance:'Teacher Attendance',notConfigured:'Not configured',rollManagement:'Roll Management',back:'Back',mIncome:'Madrasa Income',mRaseed:'Raseedat / Receipt Books',mBoxes:'Sadaqah Boxes',mHostel:'Hostel Management',mLibrary:'Library',issueBook:'Issue Book',returnBook:'Return Book',bookName:'Book Name',category:'Category',language:'Language',room:'Room',rack:'Section / Rack',almari:'Almari',shelf:'Shelf',bookId:'Book ID',issuedTo:'Issued To',issueDate:'Issue Date',returnDate:'Return Date',collection:'Collection',zakat:'Zakat',sadaqah:'Sadaqah',fitrah:'Fitrah',chanda:'Chanda / Donation'},hi:{dashboard:'डैशबोर्ड',accounting:'लेखा-जोखा',admin:'प्रशासन',academic:'शैक्षणिक सेटअप',assignments:'विषय असाइनमेंट',students:'विद्यार्थी प्रबंधन',admission:'प्रवेश फॉर्म',classes:'कक्षा एवं सेक्शन',subjects:'विषय',staff:'स्टाफ प्रबंधन',fees:'फीस प्रबंधन',salary:'वेतन प्रबंधन',attendance:'उपस्थिति',results:'परिणाम / मार्कशीट',tc:'स्थानांतरण प्रमाणपत्र',reports:'रिपोर्ट्स',mIncome:'मदरसा आय',mRaseed:'रसीदात / रसीद बुक',mBoxes:'सदक़ा बॉक्स',mHostel:'हॉस्टल प्रबंधन',mLibrary:'लाइब्रेरी',settings:'स्कूल सेटिंग्स',studentsCount:'कुल विद्यार्थी',staffCount:'कुल स्टाफ',classesCount:'कक्षाएँ',active:'सक्रिय',inactive:'निष्क्रिय',school:'स्कूल प्रोफाइल',save:'सेव करें',cancel:'रद्द करें',edit:'संपादित',delete:'हटाएँ',add:'जोड़ें',search:'खोजें...',name:'स्कूल का नाम',code:'स्कूल कोड',address:'पता',phone:'फोन / मोबाइल',email:'ईमेल',website:'वेबसाइट',board:'बोर्ड / संबद्धता',principal:'प्रधानाचार्य / निदेशक',session:'शैक्षणिक सत्र',logo:'स्कूल लोगो',signature:'प्रधानाचार्य हस्ताक्षर',admissionNo:'प्रवेश संख्या',studentName:'विद्यार्थी का नाम',father:'पिता का नाम',mother:'माता का नाम',guardian:'अभिभावक का नाम',class:'कक्षा',section:'सेक्शन',roll:'रोल नंबर',dob:'जन्म तिथि',contact:'फोन',status:'स्थिति',gender:'लिंग',male:'पुरुष',female:'महिला',other:'अन्य',blood:'ब्लड ग्रुप',addStudent:'विद्यार्थी जोड़ें',addClass:'कक्षा जोड़ें',addSubject:'विषय जोड़ें',subjectName:'विषय का नाम',noSubjects:'कोई विषय नहीं मिला।',className:'कक्षा का नाम',sectionName:'सेक्शन का नाम',capacity:'क्षमता',classTeacher:'कक्षा शिक्षक',addStaff:'स्टाफ जोड़ें',employee:'कर्मचारी आईडी',designation:'पद',subject:'विषय',joining:'जॉइनिंग डेट',salaryAmt:'वेतन',qualification:'योग्यता',staffName:'स्टाफ का नाम',select:'चुनें',noStudents:'कोई विद्यार्थी नहीं मिला।',noClasses:'कोई कक्षा नहीं मिली।',noStaff:'कोई स्टाफ नहीं मिला।',confirmDelete:'क्या यह रिकॉर्ड हटाना है?',saved:'सफलतापूर्वक सेव हुआ',placeholder:'यह मॉड्यूल अगले चरण में जोड़ा जाएगा।',feeStructure:'फीस संरचना',collectFee:'फीस जमा करें',feeRecords:'फीस रिकॉर्ड',receiptNo:'रसीद नंबर',month:'माह',amount:'राशि',previousDue:'पिछला बकाया',discount:'छूट',fine:'जुर्माना',totalPaid:'कुल भुगतान',paymentDate:'भुगतान तिथि',paymentMode:'भुगतान माध्यम',cash:'नकद',bank:'बैंक',online:'ऑनलाइन',cheque:'चेक',remarks:'टिप्पणी',viewReceipt:'रसीद देखें',print:'प्रिंट',noFees:'कोई फीस रिकॉर्ड नहीं मिला।',classFee:'कक्षा फीस',monthlyFee:'मासिक फीस',annualFee:'वार्षिक फीस',saveFee:'फीस संरचना सेव करें',salaryRecords:'वेतन रिकॉर्ड',paySalary:'वेतन भुगतान',paymentStatus:'भुगतान स्थिति',paid:'भुगतान किया',pending:'लंबित',monthYear:'माह / वर्ष',netSalary:'शुद्ध वेतन',deduction:'कटौती',allowance:'भत्ता',noSalary:'कोई वेतन रिकॉर्ड नहीं मिला।',salarySlip:'वेतन स्लिप',generate:'बनाएँ',selectStudent:'विद्यार्थी चुनें',selectStaff:'स्टाफ चुनें',feeType:'फीस प्रकार',tuition:'ट्यूशन फीस',transport:'परिवहन फीस',exam:'परीक्षा फीस',otherFee:'अन्य फीस',totalFee:'कुल फीस',balance:'बकाया',statusPaid:'भुगतान किया',statusPending:'लंबित',duplicate:'डुप्लिकेट',shifts:'शिफ्ट एवं पीरियड',timetable:'टाइमटेबल',teacherAttendance:'शिक्षक उपस्थिति',quick:'त्वरित अवलोकन',configured:'सेट है',notConfigured:'सेट नहीं है',rollManagement:'रोल प्रबंधन',back:'वापस',mIncome:'मदरसा آمدنی',mRaseed:'رسیدات / رسید بک',mBoxes:'صدقہ باکسز',mHostel:'ہاسٹل مینجمنٹ',mLibrary:'لائبریری',issueBook:'کتاب جاری کریں',returnBook:'کتاب واپس کریں',bookName:'کتاب کا نام',category:'زمرہ',language:'زبان',room:'کمرہ',rack:'سیکشن / ریک',almari:'الماری',shelf:'شیلف',bookId:'کتاب آئی ڈی',issuedTo:'جاری کردہ',issueDate:'جاری کرنے کی تاریخ',returnDate:'واپسی کی تاریخ',collection:'وصولی',zakat:'زکوٰۃ',sadaqah:'صدقہ',fitrah:'فطرہ',chanda:'چندہ / عطیہ'},ur:{dashboard:'ڈیش بورڈ',accounting:'اکاؤنٹنگ',admin:'انتظامیہ',academic:'تعلیمی سیٹ اپ',assignments:'مضامین کی اسائنمنٹ',students:'طلبہ کا انتظام',admission:'داخلہ فارم',classes:'کلاسز اور سیکشنز',subjects:'مضامین',staff:'اسٹاف مینجمنٹ',fees:'فیس مینجمنٹ',salary:'تنخواہ مینجمنٹ',attendance:'حاضری',results:'نتائج / مارک شیٹ',tc:'ٹرانسفر سرٹیفکیٹ',reports:'رپورٹس',mIncome:'مدرسہ آمدنی',mRaseed:'رسیدات / رسید بکس',mBoxes:'صدقات باکس',mHostel:'ہاسٹل مینجمنٹ',mLibrary:'لائبریری',settings:'اسکول سیٹنگز',studentsCount:'کل طلبہ',staffCount:'کل اسٹاف',classesCount:'کلاسز',active:'فعال',inactive:'غیر فعال',school:'اسکول پروفائل',save:'محفوظ کریں',cancel:'منسوخ',edit:'ترمیم',delete:'حذف',add:'شامل کریں',search:'تلاش...',name:'اسکول کا نام',code:'اسکول کوڈ',address:'پتہ',phone:'فون / موبائل',email:'ای میل',website:'ویب سائٹ',board:'بورڈ / الحاق',principal:'پرنسپل / ڈائریکٹر',session:'تعلیمی سیشن',logo:'اسکول لوگو',signature:'پرنسپل دستخط',admissionNo:'داخلہ نمبر',studentName:'طالب علم کا نام',father:'والد کا نام',mother:'والدہ کا نام',guardian:'سرپرست کا نام',class:'کلاس',section:'سیکشن',roll:'رول نمبر',dob:'تاریخ پیدائش',contact:'فون',status:'حیثیت',gender:'جنس',male:'مرد',female:'خاتون',other:'دیگر',blood:'بلڈ گروپ',addStudent:'طالب علم شامل کریں',addClass:'کلاس شامل کریں',addSubject:'مضمون شامل کریں',subjectName:'مضمون کا نام',noSubjects:'کوئی مضمون نہیں ملا۔',className:'کلاس کا نام',sectionName:'سیکشن کا نام',capacity:'گنجائش',classTeacher:'کلاس ٹیچر',addStaff:'اسٹاف شامل کریں',employee:'ملازم آئی ڈی',designation:'عہدہ',subject:'مضمون',joining:'شمولیت کی تاریخ',salaryAmt:'تنخواہ',qualification:'تعلیمی قابلیت',staffName:'اسٹاف کا نام',select:'منتخب کریں',noStudents:'کوئی طالب علم نہیں ملا۔',noClasses:'کوئی کلاس نہیں ملی۔',noStaff:'کوئی اسٹاف نہیں ملا۔',confirmDelete:'کیا یہ ریکارڈ حذف کرنا ہے؟',saved:'کامیابی سے محفوظ ہوگیا',placeholder:'یہ ماڈیول اگلے مرحلے میں شامل کیا جائے گا۔',feeStructure:'فیس اسٹرکچر',collectFee:'فیس جمع کریں',feeRecords:'فیس ریکارڈ',receiptNo:'رسید نمبر',month:'مہینہ',amount:'رقم',previousDue:'پچھلا بقایا',discount:'رعایت',fine:'جرمانہ',totalPaid:'کل ادائیگی',paymentDate:'ادائیگی کی تاریخ',paymentMode:'ادائیگی کا طریقہ',cash:'نقد',bank:'بینک',online:'آن لائن',cheque:'چیک',remarks:'ریمارکس',viewReceipt:'رسید دیکھیں',print:'پرنٹ',noFees:'کوئی فیس ریکارڈ نہیں ملا۔',classFee:'کلاس فیس',monthlyFee:'ماہانہ فیس',annualFee:'سالانہ فیس',saveFee:'فیس اسٹرکچر محفوظ کریں',salaryRecords:'تنخواہ ریکارڈ',paySalary:'تنخواہ ادا کریں',paymentStatus:'ادائیگی کی حیثیت',paid:'ادا شدہ',pending:'زیر التوا',monthYear:'مہینہ / سال',netSalary:'خالص تنخواہ',deduction:'کٹوتی',allowance:'الاؤنس',noSalary:'کوئی تنخواہ ریکارڈ نہیں ملا۔',salarySlip:'تنخواہ سلپ',generate:'بنائیں',selectStudent:'طالب علم منتخب کریں',selectStaff:'اسٹاف منتخب کریں',feeType:'فیس کی قسم',tuition:'ٹیوشن فیس',transport:'ٹرانسپورٹ فیس',exam:'امتحان فیس',otherFee:'دیگر فیس',totalFee:'کل فیس',balance:'بقایا',statusPaid:'ادا شدہ',statusPending:'زیر التوا',duplicate:'شفٹ اور پیریڈز',timetable:'ٹائم ٹیبل',teacherAttendance:'اساتذہ کی حاضری',quick:'فوری جائزہ',configured:'سیٹ ہے',notConfigured:'سیٹ نہیں ہے'}};
 Object.assign(T.ur,{settings:'مدرسہ سیٹنگز',results:'نتائج / مارک شیٹ',tc:'ٹرانسفر سرٹیفکیٹ',dashboard:'ڈیش بورڈ',back:'واپس'});
@@ -80,7 +310,29 @@ function nav(){
  ];
  document.getElementById('nav').innerHTML=groups.map(g=>{const items=g.items.filter(([k])=>roleAllowed(k));return items.length?`<div style="padding:14px 12px 5px;font-size:10px;letter-spacing:.8px;opacity:.55;font-weight:700">${g.title}</div>`+items.map(([k,i])=>`<button class="${page===k?'active':''}" onclick="go('${k}')">${i} ${t(k)}</button>`).join(''):''}).join('')
 }
-function go(p){if(!roleAllowed(p)){toast('Access denied');return}if(p==='dashboard'){pageHistory=['dashboard'];page='dashboard';render();return}if(p!==page){pageHistory=pageHistory.filter((v,i)=>i===0||v!==p);pageHistory.push(p)}page=p;render()};function backPage(){if(pageHistory.length>1){pageHistory.pop();page=pageHistory[pageHistory.length-1];render()}else{page='dashboard';pageHistory=['dashboard'];render()}};function toast(msg=t('saved')){const x=document.getElementById('toast');x.textContent=msg;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),1800)}
+function go(p){
+  if(!roleAllowed(p)){toast('Access denied');return}
+
+  if(window.innerWidth<=760){
+    closeMobileSidebar();
+  }
+
+  if(p==='dashboard'){
+    pageHistory=['dashboard'];
+    page='dashboard';
+    render();
+    return
+  }
+
+  if(p!==page){
+    pageHistory=pageHistory.filter((v,i)=>i===0||v!==p);
+    pageHistory.push(p)
+  }
+
+  page=p;
+  render()
+};
+function backPage(){if(pageHistory.length>1){pageHistory.pop();page=pageHistory[pageHistory.length-1];render()}else{page='dashboard';pageHistory=['dashboard'];render()}};function toast(msg=t('saved')){const x=document.getElementById('toast');x.textContent=msg;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),1800)}
 function applyTheme(name){const names=['theme-teal','theme-bluegreen','theme-olive','theme-darkgreen','theme-royal','theme-sunset'];document.body.classList.remove(...names);const chosen=name||'green';if(chosen!=='green')document.body.classList.add(chosen);localStorage.setItem(keys.theme,chosen);const b=document.getElementById('themeBtn');if(b)b.textContent='🎨 Themes';document.documentElement.style.setProperty('--theme-active',chosen)}
 function initTheme(){const name=localStorage.getItem(keys.theme)||'green';applyTheme(name)}
 function themeModal(){const current=localStorage.getItem(keys.theme)||'green';modal(`<div class="modalHead"><h2>🎨 ${lang==='ur'?'تھیمز':lang==='hi'?'थीम्स':'Themes'}</h2><button class="close" onclick="closeModal()">×</button></div><p class="muted">${lang==='ur'?'اپنی پسند کی تھیم منتخب کریں۔':lang==='hi'?'अपनी पसंद की थीम चुनیں۔':'Choose your preferred theme.'}</p><div class="themeChoices"><button class="themeChoice" onclick="applyTheme('green');closeModal()"><div class="themeSwatch themeGreen"></div><b>Dark Green</b><div class="mini">Madrasa Green</div></button><button class="themeChoice" onclick="applyTheme('theme-teal');closeModal()"><div class="themeSwatch themeTeal"></div><b>Teal Green</b><div class="mini">Fresh & Professional</div></button><button class="themeChoice" onclick="applyTheme('theme-bluegreen');closeModal()"><div class="themeSwatch themeBlueGreen"></div><b>Blue Green</b><div class="mini">Modern</div></button><button class="themeChoice" onclick="applyTheme('theme-olive');closeModal()"><div class="themeSwatch themeOlive"></div><b>Olive Green</b><div class="mini">Natural</div></button><button class="themeChoice" onclick="applyTheme('theme-darkgreen');closeModal()"><div class="themeSwatch themeDark"></div><b>Dark Mode</b><div class="mini">Night Office</div></button><button class="themeChoice" onclick="applyTheme('theme-royal');closeModal()"><div class="themeSwatch" style="background:linear-gradient(135deg,#4c1d95,#a855f7)"></div><b>Royal Purple</b><div class="mini">Unique & Premium</div></button><button class="themeChoice" onclick="applyTheme('theme-sunset');closeModal()"><div class="themeSwatch" style="background:linear-gradient(135deg,#7c2d12,#fb923c)"></div><b>Sunset Copper</b><div class="mini">Warm & Elegant</div></button></div>`)}
@@ -372,7 +624,6 @@ function legacyDashboard2(c){
  <div class="section"><div class="toolbar"><h2>${t('quick')}</h2><div><button class="secondary" onclick="go('reports')">${t('reports')}</button> <button class="secondary" onclick="go('backup')">${t('backup')}</button></div></div>
  <div class="info"><div class="card"><div class="muted">${t('school')}</div><b>${esc(sc.name||t('notConfigured'))}</b></div><div class="card"><div class="muted">${t('session')}</div><b>${esc(sc.session||'—')}</b></div><div class="card"><div class="muted">${t('principal')}</div><b>${esc(sc.principal||'—')}</b></div></div></div>`;
 }
-function go(p){page=p;render()}
 
 function attendanceSummary(c){
  const att=get(keys.attendance,[]), teacherAtt=get(keys.teacherAttendance,[]), students=get(keys.students,[]), staff=get(keys.staff,[]), shifts=get(keys.shifts,[]);
@@ -698,4 +949,39 @@ function mIncomePage(c){
   }
 }
 
-</script></body></html>
+</script>
+<script>
+function toggleMobileSidebar(){
+  const sidebar=document.querySelector('.sidebar');
+  const overlay=document.querySelector('.mobileSidebarOverlay');
+
+  if(!sidebar)return;
+
+  sidebar.classList.toggle('mobile-open');
+
+  if(overlay){
+    overlay.classList.toggle(
+      'show',
+      sidebar.classList.contains('mobile-open')
+    );
+  }
+}
+
+function closeMobileSidebar(){
+  const sidebar=document.querySelector('.sidebar');
+  const overlay=document.querySelector('.mobileSidebarOverlay');
+
+  if(sidebar) sidebar.classList.remove('mobile-open');
+  if(overlay) overlay.classList.remove('show');
+}
+
+/* Close menu after selecting navigation item */
+document.addEventListener('click',function(e){
+  if(window.innerWidth<=760 && e.target.closest('.nav')){
+    setTimeout(closeMobileSidebar,50);
+  }
+});
+</script>
+
+</body>
+</html>
