@@ -38,9 +38,353 @@ body.theme-sunset .section,body.theme-sunset .card,body.theme-sunset .modalBox{b
 body.theme-darkgreen .field input,body.theme-darkgreen .field select,body.theme-darkgreen .field textarea,body.theme-darkgreen .lang select{background:#081a14;color:#e8f5ef;border-color:#2d5547;}
 body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
 .themeChoices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.themeChoice{border:1px solid var(--border);background:var(--card);padding:16px;border-radius:12px;text-align:left;cursor:pointer}.themeChoice:hover{border-color:var(--blue2);transform:translateY(-1px)}.themeSwatch{height:34px;border-radius:8px;margin-bottom:9px}.themeGreen{background:linear-gradient(135deg,#064e3b,#22c55e)}.themeTeal{background:linear-gradient(135deg,#115e59,#14b8a6)}.themeBlueGreen{background:linear-gradient(135deg,#166534,#0891b2)}.themeOlive{background:linear-gradient(135deg,#365314,#84cc16)}.themeDark{background:linear-gradient(135deg,#020617,#166534)}
-</style></head><body><div class="app"><aside class="sidebar"><div class="brand"><img id="appLogo" src="icon.ico"><div><b>Travo Vista Group</b><span>Madrasa Management System</span></div></div><div class="nav" id="nav"></div></aside><main class="main"><div class="top"><div><button id="backBtn" class="secondary navBackTop" onclick="backPage()" style="display:none;margin-bottom:8px">← Back</button><h1 id="pageTitle"></h1><div class="muted" id="schoolTop"></div></div><div class="userBadge"><button class="secondary" onclick="downloadBackup()">💾 Backup</button><button class="secondary" onclick="excelExportModal()">📊 Excel Export</button><span id="loggedUser" class="mini"></span><button class="secondary" onclick="myAccountModal()">👤 My Account</button><button class="logout" onclick="logout()">🚪 Logout</button><button class="themeToggle" id="themeBtn" onclick="themeModal()">🎨 Themes</button><select id="lang" onchange="setLang(this.value)"><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option></select></div></div><div id="content"></div></main></div><div id="modal" class="modal hidden"></div><div id="toast" class="toast hidden"></div><div id="authOverlay" class="authOverlay hidden"></div>
+/* Mobile Responsive - Travo Vista Madrasa */
+/* Mobile Responsive - Fixed Sidebar + Toggle */
+.mobileMenuBtn{
+  display:none;
+}
+
+.mobileSidebarOverlay{
+  display:none;
+}
+
+@media(max-width:760px){
+
+  body{
+    overflow-x:hidden;
+  }
+
+  /* Main content full width */
+  .main,
+  .rtl .main{
+    width:100%;
+    margin:0;
+    padding:12px;
+  }
+
+  /* Fixed mobile sidebar */
+  .sidebar{
+    position:fixed;
+    z-index:1000;
+    top:0;
+    bottom:0;
+    left:0;
+    width:270px;
+    height:100vh;
+    max-height:none;
+    padding:18px 13px;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+  }
+
+  /* Sidebar open */
+  body.mobileSidebarOpen .sidebar{
+    transform:translateX(0);
+  }
+
+  /* Dark overlay behind sidebar */
+  .mobileSidebarOverlay{
+    display:block;
+    position:fixed;
+    z-index:999;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .25s ease;
+  }
+
+  body.mobileSidebarOpen .mobileSidebarOverlay{
+    opacity:1;
+    visibility:visible;
+  }
+
+  /* Toggle button */
+  .mobileMenuBtn{
+    display:flex;
+    position:fixed;
+    z-index:1100;
+    top:10px;
+    left:10px;
+    width:42px;
+    height:42px;
+    align-items:center;
+    justify-content:center;
+    border:0;
+    border-radius:10px;
+    background:#064e3b;
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+
+  /* Header */
+  .top{
+    padding-top:52px;
+    align-items:flex-start;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:14px;
+  }
+
+  .top h1{
+    font-size:21px;
+    line-height:1.3;
+  }
+
+  /* User controls */
+  .userBadge{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+
+  .userBadge button,
+  .userBadge select{
+    flex:1 1 auto;
+  }
+
+  .userBadge .mini{
+    width:100%;
+    order:-1;
+  }
+
+  /* Cards */
+  .cards{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  .stat{
+    font-size:24px;
+  }
+
+  /* Forms */
+  .grid,
+  .info{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .section{
+    padding:14px;
+    border-radius:11px;
+  }
+
+  .section h2{
+    font-size:16px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea{
+    font-size:14px;
+  }
+
+  /* Buttons */
+  .actions{
+    flex-wrap:wrap;
+  }
+
+  .actions button{
+    flex:1 1 auto;
+    min-width:110px;
+  }
+
+  /* Search */
+  .toolbar{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .search{
+    width:100%;
+    min-width:0;
+  }
+
+  /* Tables */
+  .tablewrap{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .table{
+    min-width:max-content;
+  }
+
+  .table th,
+  .table td{
+    padding:8px;
+    font-size:12px;
+  }
+
+  /* Modal */
+  .modal{
+    padding:10px;
+    align-items:flex-start;
+  }
+
+  .modalBox{
+    width:100%;
+    max-height:94vh;
+    padding:15px;
+    border-radius:12px;
+    margin-top:5px;
+  }
+
+  /* Receipt */
+  .receipt{
+    width:100%;
+    padding:15px;
+  }
+
+  .receiptHead{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .receiptGrid{
+    grid-template-columns:1fr;
+  }
+
+  /* Marksheet */
+  .marksheet{
+    width:100%;
+    padding:12px;
+    overflow-x:auto;
+  }
+
+  .msTop{
+    grid-template-columns:65px 1fr;
+  }
+
+  .msLogo img{
+    width:58px;
+    height:58px;
+  }
+
+  .msSchool h1{
+    font-size:19px;
+  }
+
+  .msTitle{
+    grid-column:1 / -1;
+  }
+
+  .msStudent{
+    grid-template-columns:1fr;
+  }
+
+  .msStudent div:nth-child(odd){
+    border-right:0;
+  }
+
+  .msTable{
+    min-width:600px;
+  }
+
+  .msSummary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .msFooter{
+    grid-template-columns:1fr;
+    gap:25px;
+    margin-top:30px;
+  }
+
+  /* Attendance */
+  .attendanceMatrix{
+    width:100%;
+    overflow-x:auto;
+  }
+
+  .attendanceMatrix .table{
+    min-width:700px;
+  }
+
+  /* Themes */
+  .themeChoices{
+    grid-template-columns:1fr;
+  }
+
+  /* Auth */
+  .authOverlay{
+    padding:12px;
+  }
+
+  .authBox{
+    width:100%;
+    padding:20px;
+    border-radius:14px;
+  }
+
+  .authBrand h2{
+    font-size:20px;
+  }
+
+  /* Toast */
+  .toast{
+    left:10px;
+    right:10px;
+    bottom:10px;
+    text-align:center;
+  }
+}
+
+@media(max-width:420px){
+
+  .mobileMenuBtn{
+    width:40px;
+    height:40px;
+    font-size:21px;
+  }
+
+  .main,
+  .rtl .main{
+    padding:9px;
+  }
+
+  .top h1{
+    font-size:19px;
+  }
+
+  .section{
+    padding:11px;
+  }
+
+  .actions button{
+    width:100%;
+    flex:1 1 100%;
+  }
+
+  .msTop{
+    grid-template-columns:55px 1fr;
+  }
+
+  .msSchool h1{
+    font-size:16px;
+  }
+}
+</style></head><body><button class="mobileMenuBtn" id="mobileMenuBtn" onclick="toggleMobileSidebar()">☰</button><div class="app"><aside class="sidebar"><div class="brand"><img id="appLogo" src="icon.ico"><div><b>Travo Vista Group</b><span>Madrasa Management System</span></div></div><div class="nav" id="nav"></div></aside><main class="main"><div class="top"><div><button id="backBtn" class="secondary navBackTop" onclick="backPage()" style="display:none;margin-bottom:8px">← Back</button><h1 id="pageTitle"></h1><div class="muted" id="schoolTop"></div></div><div class="userBadge"><button class="secondary" onclick="downloadBackup()">💾 Backup</button><button class="secondary" onclick="excelExportModal()">📊 Excel Export</button><span id="loggedUser" class="mini"></span><button class="secondary" onclick="myAccountModal()">👤 My Account</button><button class="logout" onclick="logout()">🚪 Logout</button><button class="themeToggle" id="themeBtn" onclick="themeModal()">🎨 Themes</button><select id="lang" onchange="setLang(this.value)"><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option></select></div></div><div id="content"></div></main></div><div class="mobileSidebarOverlay" id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div><div id="modal" class="modal hidden"></div><div id="toast" class="toast hidden"></div><div id="authOverlay" class="authOverlay hidden"></div>
 <script src=js/core/core.js></script>
 <script>
+  function toggleMobileSidebar(){
+  document.body.classList.toggle('mobileSidebarOpen');
+}
+
+function closeMobileSidebar(){
+  document.body.classList.remove('mobileSidebarOpen');
+}
 const T={en:{dashboard:'Dashboard',accounting:'Accounting',admin:'Administration',academic:'Academic Setup',assignments:'Subject Assignments',students:'Student Management',admission:'Admission Form',classes:'Classes & Sections',subjects:'Subjects',staff:'Staff Management',fees:'Fees Management',salary:'Salary Management',attendance:'Attendance',results:'Results / Marksheet',tc:'Transfer Certificate',reports:'Reports',mIncome:'Madrasa Income',mRaseed:'Raseedat / Receipt Books',mBoxes:'Sadaqah Boxes',mHostel:'Hostel Management',mLibrary:'Library',settings:'School Settings',studentsCount:'Total Students',staffCount:'Total Staff',classesCount:'Classes',active:'Active',inactive:'Inactive',school:'School Profile',save:'Save',cancel:'Cancel',edit:'Edit',delete:'Delete',add:'Add',search:'Search...',name:'School Name',code:'School Code',address:'Address',phone:'Phone / Mobile',email:'Email',website:'Website',board:'Board / Affiliation',principal:'Principal / Director',session:'Academic Session',logo:'School Logo',signature:'Principal Signature',admissionNo:'Admission No',studentName:'Student Name',father:'Father Name',mother:'Mother Name',guardian:'Guardian Name',class:'Class',section:'Section',roll:'Roll No',dob:'Date of Birth',contact:'Phone',status:'Status',gender:'Gender',male:'Male',female:'Female',other:'Other',blood:'Blood Group',addStudent:'Add Student',addClass:'Add Class',addSubject:'Add Subject',subjectName:'Subject Name',noSubjects:'No subjects found.',className:'Class Name',sectionName:'Section Name',capacity:'Capacity',classTeacher:'Class Teacher',addStaff:'Add Staff',employee:'Employee ID',designation:'Designation',subject:'Subject',joining:'Joining Date',salaryAmt:'Salary',qualification:'Qualification',staffName:'Staff Name',select:'Select',noStudents:'No students found.',noClasses:'No classes found.',noStaff:'No staff found.',confirmDelete:'Delete this record?',saved:'Saved successfully',placeholder:'This module will be added in the next phase.',backup:'Backup / Restore',backupData:'Backup Data',restoreData:'Restore Data',downloadBackup:'Download Backup',restoreFile:'Restore from File',backupDone:'Backup downloaded successfully',restoreDone:'Data restored successfully',reportType:'Report Type',studentReport:'Student Report',feeReport:'Fee Report',salaryReport:'Salary Report',attendanceReport:'Attendance Report',resultReport:'Result Report',tcReport:'TC Report',generateReport:'Generate Report',exportCsv:'Export CSV',printReport:'Print Report',totalCollected:'Total Collected',totalPending:'Total Pending',present:'Present',absent:'Absent',late:'Late',leave:'Leave',totalRecords:'Total Records',today:'Today',thisMonth:'This Month',backupHint:'Create a complete local backup of your school data. Keep the file in a safe place.',restoreHint:'Restore a previously exported backup. Existing local data will be replaced.',noData:'No data available.',totalFeeAmount:'Total Fee Amount',totalSalary:'Total Salary Paid',quick:'Quick Overview',configured:'Configured',notConfigured:'Not configured',feeStructure:'Fee Structure',collectFee:'Collect Fee',feeRecords:'Fee Records',receiptNo:'Receipt No',month:'Month',amount:'Amount',previousDue:'Previous Due',discount:'Discount',fine:'Fine',totalPaid:'Total Paid',paymentDate:'Payment Date',paymentMode:'Payment Mode',cash:'Cash',bank:'Bank',online:'Online',cheque:'Cheque',remarks:'Remarks',viewReceipt:'View Receipt',print:'Print',noFees:'No fee records found.',classFee:'Class Fee',monthlyFee:'Monthly Fee',annualFee:'Annual Fee',saveFee:'Save Fee Structure',salaryRecords:'Salary Records',paySalary:'Pay Salary',paymentStatus:'Payment Status',paid:'Paid',pending:'Pending',monthYear:'Month / Year',netSalary:'Net Salary',deduction:'Deduction',allowance:'Allowance',noSalary:'No salary records found.',salarySlip:'Salary Slip',generate:'Generate',selectStudent:'Select Student',selectStaff:'Select Staff',feeType:'Fee Type',tuition:'Tuition Fee',transport:'Transport Fee',exam:'Exam Fee',otherFee:'Other Fee',totalFee:'Total Fee',balance:'Balance',statusPaid:'Paid',statusPending:'Pending',duplicate:'Duplicate',shifts:'Shifts & Periods',timetable:'Timetable',teacherAttendance:'Teacher Attendance',notConfigured:'Not configured',rollManagement:'Roll Management',back:'Back',mIncome:'Madrasa Income',mRaseed:'Raseedat / Receipt Books',mBoxes:'Sadaqah Boxes',mHostel:'Hostel Management',mLibrary:'Library',issueBook:'Issue Book',returnBook:'Return Book',bookName:'Book Name',category:'Category',language:'Language',room:'Room',rack:'Section / Rack',almari:'Almari',shelf:'Shelf',bookId:'Book ID',issuedTo:'Issued To',issueDate:'Issue Date',returnDate:'Return Date',collection:'Collection',zakat:'Zakat',sadaqah:'Sadaqah',fitrah:'Fitrah',chanda:'Chanda / Donation'},hi:{dashboard:'डैशबोर्ड',accounting:'लेखा-जोखा',admin:'प्रशासन',academic:'शैक्षणिक सेटअप',assignments:'विषय असाइनमेंट',students:'विद्यार्थी प्रबंधन',admission:'प्रवेश फॉर्म',classes:'कक्षा एवं सेक्शन',subjects:'विषय',staff:'स्टाफ प्रबंधन',fees:'फीस प्रबंधन',salary:'वेतन प्रबंधन',attendance:'उपस्थिति',results:'परिणाम / मार्कशीट',tc:'स्थानांतरण प्रमाणपत्र',reports:'रिपोर्ट्स',mIncome:'मदरसा आय',mRaseed:'रसीदात / रसीद बुक',mBoxes:'सदक़ा बॉक्स',mHostel:'हॉस्टल प्रबंधन',mLibrary:'लाइब्रेरी',settings:'स्कूल सेटिंग्स',studentsCount:'कुल विद्यार्थी',staffCount:'कुल स्टाफ',classesCount:'कक्षाएँ',active:'सक्रिय',inactive:'निष्क्रिय',school:'स्कूल प्रोफाइल',save:'सेव करें',cancel:'रद्द करें',edit:'संपादित',delete:'हटाएँ',add:'जोड़ें',search:'खोजें...',name:'स्कूल का नाम',code:'स्कूल कोड',address:'पता',phone:'फोन / मोबाइल',email:'ईमेल',website:'वेबसाइट',board:'बोर्ड / संबद्धता',principal:'प्रधानाचार्य / निदेशक',session:'शैक्षणिक सत्र',logo:'स्कूल लोगो',signature:'प्रधानाचार्य हस्ताक्षर',admissionNo:'प्रवेश संख्या',studentName:'विद्यार्थी का नाम',father:'पिता का नाम',mother:'माता का नाम',guardian:'अभिभावक का नाम',class:'कक्षा',section:'सेक्शन',roll:'रोल नंबर',dob:'जन्म तिथि',contact:'फोन',status:'स्थिति',gender:'लिंग',male:'पुरुष',female:'महिला',other:'अन्य',blood:'ब्लड ग्रुप',addStudent:'विद्यार्थी जोड़ें',addClass:'कक्षा जोड़ें',addSubject:'विषय जोड़ें',subjectName:'विषय का नाम',noSubjects:'कोई विषय नहीं मिला।',className:'कक्षा का नाम',sectionName:'सेक्शन का नाम',capacity:'क्षमता',classTeacher:'कक्षा शिक्षक',addStaff:'स्टाफ जोड़ें',employee:'कर्मचारी आईडी',designation:'पद',subject:'विषय',joining:'जॉइनिंग डेट',salaryAmt:'वेतन',qualification:'योग्यता',staffName:'स्टाफ का नाम',select:'चुनें',noStudents:'कोई विद्यार्थी नहीं मिला।',noClasses:'कोई कक्षा नहीं मिली।',noStaff:'कोई स्टाफ नहीं मिला।',confirmDelete:'क्या यह रिकॉर्ड हटाना है?',saved:'सफलतापूर्वक सेव हुआ',placeholder:'यह मॉड्यूल अगले चरण में जोड़ा जाएगा।',feeStructure:'फीस संरचना',collectFee:'फीस जमा करें',feeRecords:'फीस रिकॉर्ड',receiptNo:'रसीद नंबर',month:'माह',amount:'राशि',previousDue:'पिछला बकाया',discount:'छूट',fine:'जुर्माना',totalPaid:'कुल भुगतान',paymentDate:'भुगतान तिथि',paymentMode:'भुगतान माध्यम',cash:'नकद',bank:'बैंक',online:'ऑनलाइन',cheque:'चेक',remarks:'टिप्पणी',viewReceipt:'रसीद देखें',print:'प्रिंट',noFees:'कोई फीस रिकॉर्ड नहीं मिला।',classFee:'कक्षा फीस',monthlyFee:'मासिक फीस',annualFee:'वार्षिक फीस',saveFee:'फीस संरचना सेव करें',salaryRecords:'वेतन रिकॉर्ड',paySalary:'वेतन भुगतान',paymentStatus:'भुगतान स्थिति',paid:'भुगतान किया',pending:'लंबित',monthYear:'माह / वर्ष',netSalary:'शुद्ध वेतन',deduction:'कटौती',allowance:'भत्ता',noSalary:'कोई वेतन रिकॉर्ड नहीं मिला।',salarySlip:'वेतन स्लिप',generate:'बनाएँ',selectStudent:'विद्यार्थी चुनें',selectStaff:'स्टाफ चुनें',feeType:'फीस प्रकार',tuition:'ट्यूशन फीस',transport:'परिवहन फीस',exam:'परीक्षा फीस',otherFee:'अन्य फीस',totalFee:'कुल फीस',balance:'बकाया',statusPaid:'भुगतान किया',statusPending:'लंबित',duplicate:'डुप्लिकेट',shifts:'शिफ्ट एवं पीरियड',timetable:'टाइमटेबल',teacherAttendance:'शिक्षक उपस्थिति',quick:'त्वरित अवलोकन',configured:'सेट है',notConfigured:'सेट नहीं है',rollManagement:'रोल प्रबंधन',back:'वापस',mIncome:'मदरसा آمدنی',mRaseed:'رسیدات / رسید بک',mBoxes:'صدقہ باکسز',mHostel:'ہاسٹل مینجمنٹ',mLibrary:'لائبریری',issueBook:'کتاب جاری کریں',returnBook:'کتاب واپس کریں',bookName:'کتاب کا نام',category:'زمرہ',language:'زبان',room:'کمرہ',rack:'سیکشن / ریک',almari:'الماری',shelf:'شیلف',bookId:'کتاب آئی ڈی',issuedTo:'جاری کردہ',issueDate:'جاری کرنے کی تاریخ',returnDate:'واپسی کی تاریخ',collection:'وصولی',zakat:'زکوٰۃ',sadaqah:'صدقہ',fitrah:'فطرہ',chanda:'چندہ / عطیہ'},ur:{dashboard:'ڈیش بورڈ',accounting:'اکاؤنٹنگ',admin:'انتظامیہ',academic:'تعلیمی سیٹ اپ',assignments:'مضامین کی اسائنمنٹ',students:'طلبہ کا انتظام',admission:'داخلہ فارم',classes:'کلاسز اور سیکشنز',subjects:'مضامین',staff:'اسٹاف مینجمنٹ',fees:'فیس مینجمنٹ',salary:'تنخواہ مینجمنٹ',attendance:'حاضری',results:'نتائج / مارک شیٹ',tc:'ٹرانسفر سرٹیفکیٹ',reports:'رپورٹس',mIncome:'مدرسہ آمدنی',mRaseed:'رسیدات / رسید بکس',mBoxes:'صدقات باکس',mHostel:'ہاسٹل مینجمنٹ',mLibrary:'لائبریری',settings:'اسکول سیٹنگز',studentsCount:'کل طلبہ',staffCount:'کل اسٹاف',classesCount:'کلاسز',active:'فعال',inactive:'غیر فعال',school:'اسکول پروفائل',save:'محفوظ کریں',cancel:'منسوخ',edit:'ترمیم',delete:'حذف',add:'شامل کریں',search:'تلاش...',name:'اسکول کا نام',code:'اسکول کوڈ',address:'پتہ',phone:'فون / موبائل',email:'ای میل',website:'ویب سائٹ',board:'بورڈ / الحاق',principal:'پرنسپل / ڈائریکٹر',session:'تعلیمی سیشن',logo:'اسکول لوگو',signature:'پرنسپل دستخط',admissionNo:'داخلہ نمبر',studentName:'طالب علم کا نام',father:'والد کا نام',mother:'والدہ کا نام',guardian:'سرپرست کا نام',class:'کلاس',section:'سیکشن',roll:'رول نمبر',dob:'تاریخ پیدائش',contact:'فون',status:'حیثیت',gender:'جنس',male:'مرد',female:'خاتون',other:'دیگر',blood:'بلڈ گروپ',addStudent:'طالب علم شامل کریں',addClass:'کلاس شامل کریں',addSubject:'مضمون شامل کریں',subjectName:'مضمون کا نام',noSubjects:'کوئی مضمون نہیں ملا۔',className:'کلاس کا نام',sectionName:'سیکشن کا نام',capacity:'گنجائش',classTeacher:'کلاس ٹیچر',addStaff:'اسٹاف شامل کریں',employee:'ملازم آئی ڈی',designation:'عہدہ',subject:'مضمون',joining:'شمولیت کی تاریخ',salaryAmt:'تنخواہ',qualification:'تعلیمی قابلیت',staffName:'اسٹاف کا نام',select:'منتخب کریں',noStudents:'کوئی طالب علم نہیں ملا۔',noClasses:'کوئی کلاس نہیں ملی۔',noStaff:'کوئی اسٹاف نہیں ملا۔',confirmDelete:'کیا یہ ریکارڈ حذف کرنا ہے؟',saved:'کامیابی سے محفوظ ہوگیا',placeholder:'یہ ماڈیول اگلے مرحلے میں شامل کیا جائے گا۔',feeStructure:'فیس اسٹرکچر',collectFee:'فیس جمع کریں',feeRecords:'فیس ریکارڈ',receiptNo:'رسید نمبر',month:'مہینہ',amount:'رقم',previousDue:'پچھلا بقایا',discount:'رعایت',fine:'جرمانہ',totalPaid:'کل ادائیگی',paymentDate:'ادائیگی کی تاریخ',paymentMode:'ادائیگی کا طریقہ',cash:'نقد',bank:'بینک',online:'آن لائن',cheque:'چیک',remarks:'ریمارکس',viewReceipt:'رسید دیکھیں',print:'پرنٹ',noFees:'کوئی فیس ریکارڈ نہیں ملا۔',classFee:'کلاس فیس',monthlyFee:'ماہانہ فیس',annualFee:'سالانہ فیس',saveFee:'فیس اسٹرکچر محفوظ کریں',salaryRecords:'تنخواہ ریکارڈ',paySalary:'تنخواہ ادا کریں',paymentStatus:'ادائیگی کی حیثیت',paid:'ادا شدہ',pending:'زیر التوا',monthYear:'مہینہ / سال',netSalary:'خالص تنخواہ',deduction:'کٹوتی',allowance:'الاؤنس',noSalary:'کوئی تنخواہ ریکارڈ نہیں ملا۔',salarySlip:'تنخواہ سلپ',generate:'بنائیں',selectStudent:'طالب علم منتخب کریں',selectStaff:'اسٹاف منتخب کریں',feeType:'فیس کی قسم',tuition:'ٹیوشن فیس',transport:'ٹرانسپورٹ فیس',exam:'امتحان فیس',otherFee:'دیگر فیس',totalFee:'کل فیس',balance:'بقایا',statusPaid:'ادا شدہ',statusPending:'زیر التوا',duplicate:'شفٹ اور پیریڈز',timetable:'ٹائم ٹیبل',teacherAttendance:'اساتذہ کی حاضری',quick:'فوری جائزہ',configured:'سیٹ ہے',notConfigured:'سیٹ نہیں ہے'}};
 Object.assign(T.ur,{settings:'مدرسہ سیٹنگز',results:'نتائج / مارک شیٹ',tc:'ٹرانسفر سرٹیفکیٹ',dashboard:'ڈیش بورڈ',back:'واپس'});
 Object.assign(T.hi,{settings:'मदरसा सेटिंग्स'});

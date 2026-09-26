@@ -45,7 +45,7 @@
     if(!client||!orgId)return;
     const {data,error}=await client.from('app_data').select('data').eq('org_id',orgId).maybeSingle();
     if(error)throw error;
-    if(data?.data&&typeof data.data==='object')Object.entries(data.data).forEach(([k,v])=>{try{originalSet.call(localStorage,k,JSON.stringify(v))}catch{}});
+    if(data?.data&&typeof data.data==='object')Object.entries(data.data).forEach(([k,v])=>{try{originalSet.call(localStorage,k,typeof v==='string'?v:JSON.stringify(v))}catch{}});
   }
   function finish(user,remember){
     const u={name:user.name||user.email||user.identifier||'',identifier:user.email||user.identifier||'',role:user.role||'Administrator',type:user.type||'admin'};
