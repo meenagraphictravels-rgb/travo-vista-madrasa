@@ -393,7 +393,7 @@ window.forgotPassword=async function(){
     const {error}=await client.auth.resetPasswordForEmail(
       email.trim(),
       {
-        redirectTo:location.href
+        redirectTo:window.location.origin+window.location.pathname
       }
     );
 
