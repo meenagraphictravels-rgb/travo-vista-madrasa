@@ -56,26 +56,583 @@
     document.getElementById('authOverlay')?.classList.add('hidden');
     render();
   }
-  window.authOverlay=function(mode='login'){
-    const box=document.getElementById('authOverlay');if(!box)return;box.classList.remove('hidden');
-    const signup=mode==='signup';
-    box.innerHTML=`<div class="authBox"><div class="authBrand"><img src="icon.ico"><h2>${signup?'Create Administrator Account':'Welcome Back'}</h2><p>Travo Vista Group – Madrasa Management System</p></div><div class="authTabs"><button class="active">${signup?'Create Account':'Login'}</button>${signup?'':'<button type="button" onclick="authOverlay(\'signup\')" style="margin-left:8px">Create Account</button>'}</div><form id="onlineAuthForm"><div class="field">${signup?'<label>Admin Name</label><input name="name" required autofocus>':'<label>Email Address</label><input name="identifier" type="email" required autocomplete="username" autofocus>'}</div>${signup?'<div class="field" style="margin-top:12px"><label>Email Address</label><input name="identifier" type="email" required autocomplete="username"></div>':''}<div class="field" style="margin-top:12px"><label>Password</label><input name="password" type="password" minlength="6" required autocomplete="${signup?'new':'current'}-password"></div>${signup?'<div class="field" style="margin-top:12px"><label>Confirm Password</label><input name="confirm" type="password" minlength="6" required autocomplete="new-password"></div>':'<label class="authRemember"><input type="checkbox" name="remember"> Remember Me</label>'}<div id="authMsg" class="authError"></div><div class="actions"><button type="submit" class="primary" style="width:100%">${signup?'Create Administrator Account':'Login'}</button></div></form><div class="authLinks">${signup?'<button type="button" onclick="authOverlay(\'login\')">Already have an account? Login</button>':'<button type="button" onclick="forgotPassword()">Forgot Password?</button>'}</div><div class="authHint">Administrator and staff accounts are secured online for this organization.</div></div>`;
-    document.getElementById('onlineAuthForm').onsubmit=signup?window.doSignup:window.doLogin;
-  };
-  window.doSignup=async function(e){e.preventDefault();msg('Creating account...');try{if(!client)throw new Error('Supabase is not configured.');const f=new FormData(e.target),name=String(f.get('name')||'').trim(),email=String(f.get('identifier')||'').trim().toLowerCase(),password=String(f.get('password')||''),confirm=String(f.get('confirm')||'');if(!name||!email)throw new Error('Please complete all required fields.');if(password.length<6)throw new Error('Password must be at least 6 characters.');if(password!==confirm)throw new Error('Passwords do not match.');const {data,error}=await client.auth.signUp({email,password,options:{data:{name},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;if(!data.user)throw new Error('Account could not be created.');if(data.session){await ensureOrg(data.user);await pullCloud();finish({name,email,role:'Administrator',type:'admin'},true)}else{msg('Account created. Please confirm your email, then return here and login.')}}catch(err){console.error(err);msg(err?.message||'Unable to create account.')}};
-  window.doLogin=async function(e){e.preventDefault();msg('Signing in...');try{if(!client)throw new Error('Supabase is not configured.');const f=new FormData(e.target),email=String(f.get('identifier')||'').trim().toLowerCase(),password=String(f.get('password')||''),remember=f.get('remember')==='on';const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;await ensureOrg(data.user);await pullCloud();finish({name:data.user.user_metadata?.name||email,email,role:'Administrator',type:'admin'},remember)}catch(err){console.error(err);msg(err?.message||'Invalid login or password.')}};
-  window.forgotPassword=async function(){const email=prompt('Enter your registered email address:');if(!email||!client)return;try{const {error}=await client.auth.resetPasswordForEmail(email.trim(),{redirectTo:location.href});if(error)throw error;alert('Password reset email sent.')}catch(e){alert('Password reset failed: '+(e?.message||'Unknown error'))}};
-  window.logout=async function(){try{if(client)await client.auth.signOut()}catch{}sessionStorage.removeItem('tvgsLoggedIn');localStorage.removeItem('tv_current_user');localStorage.removeItem('tv_org_id');orgId=null;window.__tvOrgId=null;authOverlay('login')};
-  window.initAuth=async function(){
-    if(!validConfig()){authOverlay('login');msg('New Supabase project is not configured yet. Add the URL and publishable key in supabase-config.js.');return}
+ window.toggleAuthPassword=function(inputId,button){
+  const input=document.getElementById(inputId);
+  if(!input)return;
+
+  const showing=input.type==='text';
+  input.type=showing?'password':'text';
+
+  button.innerHTML=showing
+    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6.5 0 10 6 10 6a17.7 17.7 0 0 1-3.2 3.6"></path><path d="M6.2 6.2C3.5 8.2 2 12 2 12s3.5 6 10 6c1.4 0 2.7-.3 3.9-.8"></path></svg>';
+
+  button.setAttribute(
+    'aria-label',
+    showing ? 'Show password' : 'Hide password'
+  );
+};
+
+
+window.authOverlay=function(mode='login'){
+  const box=document.getElementById('authOverlay');
+  if(!box)return;
+
+  box.classList.remove('hidden');
+
+  const signup=mode==='signup';
+
+  box.innerHTML=`
+    <div class="authBox">
+
+      <div class="authBrand">
+        <img src="icon.ico" alt="Travo Vista">
+        <h2>${signup?'Create Administrator Account':'Welcome Back'}</h2>
+        <p>Travo Vista Group – Madrasa Management System</p>
+      </div>
+
+      <div class="authTabs">
+
+        <button
+          type="button"
+          class="${signup?'':'active'}"
+          onclick="authOverlay('login')">
+          Login
+        </button>
+
+        <button
+          type="button"
+          class="${signup?'active':''}"
+          onclick="authOverlay('signup')">
+          Create Account
+        </button>
+
+      </div>
+
+      <form id="onlineAuthForm">
+
+        ${
+          signup
+          ? `
+            <div class="field">
+              <label>Admin Name</label>
+              <input
+                name="name"
+                required
+                autofocus
+                autocomplete="name"
+                placeholder="Enter administrator name">
+            </div>
+
+            <div class="field" style="margin-top:12px">
+              <label>Email Address</label>
+              <input
+                name="identifier"
+                type="email"
+                required
+                autocomplete="username"
+                placeholder="Enter email address">
+            </div>
+          `
+          : `
+            <div class="field">
+              <label>Email Address</label>
+              <input
+                name="identifier"
+                type="email"
+                required
+                autocomplete="username"
+                autofocus
+                placeholder="Enter email address">
+            </div>
+          `
+        }
+
+        <div class="field" style="margin-top:12px">
+          <label>Password</label>
+
+          <div class="tvPasswordWrap">
+
+            <input
+              id="authPassword"
+              name="password"
+              type="password"
+              minlength="6"
+              required
+              autocomplete="${signup?'new':'current'}-password"
+              placeholder="Enter password">
+
+            <button
+              type="button"
+              class="tvPasswordToggle"
+              onclick="toggleAuthPassword('authPassword',this)"
+              aria-label="Show password">
+
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="2.5"></circle>
+              </svg>
+
+            </button>
+
+          </div>
+        </div>
+
+        ${
+          signup
+          ? `
+            <div class="field" style="margin-top:12px">
+              <label>Confirm Password</label>
+
+              <div class="tvPasswordWrap">
+
+                <input
+                  id="authConfirm"
+                  name="confirm"
+                  type="password"
+                  minlength="6"
+                  required
+                  autocomplete="new-password"
+                  placeholder="Confirm password">
+
+                <button
+                  type="button"
+                  class="tvPasswordToggle"
+                  onclick="toggleAuthPassword('authConfirm',this)"
+                  aria-label="Show password">
+
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"></path>
+                    <circle cx="12" cy="12" r="2.5"></circle>
+                  </svg>
+
+                </button>
+
+              </div>
+            </div>
+          `
+          : `
+            <label class="authRemember">
+              <input type="checkbox" name="remember">
+              <span>Remember Me</span>
+            </label>
+          `
+        }
+
+        <div id="authMsg" class="authError"></div>
+
+        <div class="actions">
+          <button
+            type="submit"
+            class="primary"
+            style="width:100%">
+            ${signup?'Create Administrator Account':'Login'}
+          </button>
+        </div>
+
+      </form>
+
+      <div class="authLinks">
+
+        ${
+          signup
+          ? `
+            <button
+              type="button"
+              onclick="authOverlay('login')">
+              Already have an account? Login
+            </button>
+          `
+          : `
+            <button
+              type="button"
+              onclick="forgotPassword()">
+              Forgot Password?
+            </button>
+          `
+        }
+
+      </div>
+
+      <div class="authHint">
+        Administrator and staff accounts are secured online for this organization.
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('onlineAuthForm').onsubmit=
+    signup ? window.doSignup : window.doLogin;
+};
+
+
+window.doSignup=async function(e){
+  e.preventDefault();
+
+  msg('Creating account...');
+
+  try{
+
+    if(!client)
+      throw new Error('Supabase is not configured.');
+
+    const f=new FormData(e.target);
+
+    const name=String(f.get('name')||'').trim();
+    const email=String(f.get('identifier')||'').trim().toLowerCase();
+    const password=String(f.get('password')||'');
+    const confirm=String(f.get('confirm')||'');
+
+    if(!name||!email)
+      throw new Error('Please complete all required fields.');
+
+    if(password.length<6)
+      throw new Error('Password must be at least 6 characters.');
+
+    if(password!==confirm)
+      throw new Error('Passwords do not match.');
+
+    const {data,error}=await client.auth.signUp({
+      email,
+      password,
+      options:{
+        data:{name},
+        emailRedirectTo:location.origin+location.pathname
+      }
+    });
+
+    if(error)
+      throw error;
+
+    if(!data.user)
+      throw new Error('Account could not be created.');
+
+    if(data.session){
+
+      await ensureOrg(data.user);
+      await pullCloud();
+
+      finish({
+        name,
+        email,
+        role:'Administrator',
+        type:'admin'
+      },true);
+
+    }else{
+
+      msg(
+        'Account created. Please confirm your email, then return here and login.'
+      );
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+    msg(err?.message||'Unable to create account.');
+
+  }
+};
+
+
+window.doLogin=async function(e){
+  e.preventDefault();
+
+  msg('Signing in...');
+
+  try{
+
+    if(!client)
+      throw new Error('Supabase is not configured.');
+
+    const f=new FormData(e.target);
+
+    const email=String(f.get('identifier')||'').trim().toLowerCase();
+    const password=String(f.get('password')||'');
+    const remember=f.get('remember')==='on';
+
+    const {data,error}=await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error)
+      throw error;
+
+    await ensureOrg(data.user);
+    await pullCloud();
+
+    finish({
+      name:data.user.user_metadata?.name||email,
+      email,
+      role:'Administrator',
+      type:'admin'
+    },remember);
+
+  }catch(err){
+
+    console.error(err);
+    msg(err?.message||'Invalid login or password.');
+
+  }
+};
+
+
+window.forgotPassword=async function(){
+
+  const email=prompt(
+    'Enter your registered email address:'
+  );
+
+  if(!email||!client)
+    return;
+
+  try{
+
+    const {error}=await client.auth.resetPasswordForEmail(
+      email.trim(),
+      {
+        redirectTo:location.href
+      }
+    );
+
+    if(error)
+      throw error;
+
+    alert('Password reset email sent.');
+
+  }catch(e){
+
+    alert(
+      'Password reset failed: '+
+      (e?.message||'Unknown error')
+    );
+
+  }
+};
+window.resetPasswordOverlay=function(){
+  const box=document.getElementById('authOverlay');
+  if(!box)return;
+
+  box.classList.remove('hidden');
+
+  box.innerHTML=`
+    <div class="authBox">
+      <div class="authBrand">
+        <img src="icon.ico" alt="Travo Vista">
+        <h2>Set New Password</h2>
+        <p>Enter and confirm your new password</p>
+      </div>
+
+      <form id="resetPasswordForm">
+        <div class="field" style="margin-top:12px">
+          <label>New Password</label>
+          <div class="tvPasswordWrap">
+            <input
+              id="resetNewPassword"
+              type="password"
+              minlength="6"
+              required
+              autocomplete="new-password"
+              placeholder="Enter new password">
+            <button
+              type="button"
+              class="tvPasswordToggle"
+              onclick="toggleAuthPassword('resetNewPassword',this)"
+              aria-label="Show password">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="2.5"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px">
+          <label>Confirm New Password</label>
+          <div class="tvPasswordWrap">
+            <input
+              id="resetConfirmPassword"
+              type="password"
+              minlength="6"
+              required
+              autocomplete="new-password"
+              placeholder="Confirm new password">
+            <button
+              type="button"
+              class="tvPasswordToggle"
+              onclick="toggleAuthPassword('resetConfirmPassword',this)"
+              aria-label="Show password">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="2.5"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="authMsg" class="authError"></div>
+
+        <div class="actions">
+          <button type="submit" class="primary" style="width:100%">
+            Update Password
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.getElementById('resetPasswordForm').onsubmit=async function(e){
+    e.preventDefault();
+
+    const password=document.getElementById('resetNewPassword').value;
+    const confirm=document.getElementById('resetConfirmPassword').value;
+
+    if(password.length<6){
+      msg('Password must be at least 6 characters.');
+      return;
+    }
+
+    if(password!==confirm){
+      msg('Passwords do not match.');
+      return;
+    }
+
     try{
-      client=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});window.__tvSupabase=client;
-      const {data}=await client.auth.getSession();
-      if(data?.session?.user){await ensureOrg(data.session.user);await pullCloud();finish({name:data.session.user.user_metadata?.name||data.session.user.email,email:data.session.user.email,role:'Administrator',type:'admin'},true)}else authOverlay('login');
-      client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){sessionStorage.removeItem('tvgsLoggedIn');authOverlay('login')}});
-    }catch(e){console.error(e);authOverlay('login');msg('Online startup failed: '+(e?.message||'Unknown error'))}
+      msg('Updating password...');
+
+      const {error}=await client.auth.updateUser({password});
+
+      if(error)throw error;
+
+      await client.auth.signOut();
+
+      authOverlay('login');
+      msg('Password updated successfully. Please login with your new password.');
+
+    }catch(err){
+      console.error(err);
+      msg(err?.message||'Unable to update password.');
+    }
   };
-  window.tvCloudReady=()=>!!(client&&orgId);
-  window.tvCloudSync=pushCloud;
-  window.addEventListener('load',()=>window.initAuth());
+};
+
+window.logout=async function(){
+
+  try{
+
+    if(client)
+      await client.auth.signOut();
+
+  }catch{}
+
+  sessionStorage.removeItem('tvgsLoggedIn');
+  localStorage.removeItem('tv_current_user');
+  localStorage.removeItem('tv_org_id');
+
+  orgId=null;
+  window.__tvOrgId=null;
+
+  authOverlay('login');
+};
+
+
+window.initAuth=async function(){
+
+  if(!validConfig()){
+
+    authOverlay('login');
+
+    msg(
+      'New Supabase project is not configured yet. Add the URL and publishable key in supabase-config.js.'
+    );
+
+    return;
+  }
+
+  try{
+
+    client=supabase.createClient(
+      window.SUPABASE_URL,
+      window.SUPABASE_ANON_KEY,
+      {
+        auth:{
+          persistSession:true,
+          autoRefreshToken:true,
+          detectSessionInUrl:true
+        }
+      }
+    );
+
+    window.__tvSupabase=client;
+
+    let recoveryMode=
+      new URLSearchParams(location.hash.replace(/^#/,'')).get('type')==='recovery';
+
+    client.auth.onAuthStateChange((event,session)=>{
+
+      if(event==='PASSWORD_RECOVERY'){
+        recoveryMode=true;
+        window.resetPasswordOverlay();
+      }
+
+      if(event==='SIGNED_OUT'){
+        sessionStorage.removeItem('tvgsLoggedIn');
+        authOverlay('login');
+      }
+
+    });
+
+    const {data,error}=await client.auth.getSession();
+
+    if(error)throw error;
+
+    if(recoveryMode){
+      window.resetPasswordOverlay();
+      return;
+    }
+
+    if(data?.session?.user){
+
+      await ensureOrg(data.session.user);
+      await pullCloud();
+
+      finish({
+        name:data.session.user.user_metadata?.name||data.session.user.email,
+        email:data.session.user.email,
+        role:'Administrator',
+        type:'admin'
+      },true);
+
+    }else{
+
+      authOverlay('login');
+
+    }
+
+  }catch(e){
+
+    console.error(e);
+
+    authOverlay('login');
+
+    msg(
+      'Online startup failed: '+
+      (e?.message||'Unknown error')
+    );
+
+  }
+};
+
+
+window.tvCloudReady=()=>!!(client&&orgId);
+
+window.tvCloudSync=pushCloud;
+
+window.addEventListener(
+  'load',
+  ()=>window.initAuth()
+);
+
 })();

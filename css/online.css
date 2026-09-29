@@ -1,2 +1,17 @@
 /* Small online-only additions. Original application CSS remains in index.html for safety. */
-.authBox{max-width:460px}.authHint{line-height:1.5}
+.authBox{max-width:460px}
+.authHint{line-height:1.5}
+
+.tvPasswordToggle svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.tvPasswordToggle:hover svg{
+  transform:scale(1.05);
+}

@@ -31,9 +31,372 @@ body.theme-sunset .sidebar{background:linear-gradient(180deg,#9a3412,#431407)}
 body.theme-royal .section,body.theme-royal .card,body.theme-royal .modalBox{border-color:#e9d5ff}
 body.theme-sunset .section,body.theme-sunset .card,body.theme-sunset .modalBox{border-color:#fed7aa}
 .authOverlay{background:radial-gradient(circle at 15% 20%,rgba(34,197,94,.25),transparent 32%),linear-gradient(135deg,#022c22,#064e3b 55%,#14532d);}
-.authBox{border:1px solid rgba(255,255,255,.15);}
-.authLinks{display:flex;justify-content:space-between;gap:10px;margin-top:12px;font-size:12px}.authLinks button{border:0;background:none;color:var(--blue2);cursor:pointer;font-weight:700;padding:4px}.authLinks button:hover{text-decoration:underline}
-.authRemember{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:12px;color:#687386}.authRemember input{width:16px;height:16px;accent-color:#16834d}
+/* =========================================================
+   Travo Vista Premium Authentication UI
+   ========================================================= */
+
+.authOverlay{
+  background:
+    radial-gradient(circle at 12% 18%,rgba(34,197,94,.22),transparent 30%),
+    radial-gradient(circle at 88% 82%,rgba(20,184,166,.16),transparent 30%),
+    linear-gradient(135deg,#021b14 0%,#063b2b 48%,#052e24 100%);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+.authBox{
+  width:min(480px,100%);
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(255,255,255,.55);
+  border-radius:24px;
+  padding:32px;
+  box-shadow:
+    0 35px 90px rgba(0,0,0,.32),
+    0 12px 30px rgba(0,0,0,.14);
+  animation:tvAuthEnter .45s ease both;
+}
+
+.authBox::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:5px;
+  background:linear-gradient(90deg,#064e3b,#16a34a,#14b8a6);
+}
+
+@keyframes tvAuthEnter{
+  from{
+    opacity:0;
+    transform:translateY(18px) scale(.97);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.authBrand{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.authBrand img{
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  border-radius:18px;
+  padding:6px;
+  background:#f0fdf4;
+  box-shadow:
+    0 10px 24px rgba(6,78,59,.16),
+    inset 0 0 0 1px rgba(6,78,59,.08);
+}
+
+.authBrand h2{
+  margin:13px 0 5px;
+  color:#12372d;
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:-.3px;
+}
+
+.authBrand p{
+  margin:0;
+  color:#6b7c75;
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* Premium Login / Create Account tabs */
+
+.authTabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:20px;
+  padding:5px;
+  background:#edf7f2;
+  border:1px solid #d9ebe3;
+  border-radius:13px;
+}
+
+.authTabs button{
+  border:1px solid transparent;
+  background:transparent;
+  color:#527066;
+  padding:11px 12px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    color .18s ease;
+}
+
+.authTabs button:hover{
+  color:#064e3b;
+  background:#fff;
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(6,78,59,.10);
+}
+
+.authTabs button.active{
+  background:linear-gradient(135deg,#064e3b,#087f5b);
+  color:#fff;
+  border-color:#064e3b;
+  box-shadow:
+    0 5px 0 #043c2d,
+    0 9px 18px rgba(6,78,59,.20);
+  transform:translateY(-1px);
+}
+
+.authTabs button.active:active{
+  transform:translateY(3px);
+  box-shadow:
+    0 2px 0 #043c2d,
+    0 4px 9px rgba(6,78,59,.16);
+}
+
+/* Auth fields */
+
+.authBox .field{
+  position:relative;
+}
+
+.authBox .field label{
+  display:block;
+  margin-bottom:7px;
+  color:#29483e;
+  font-size:12px;
+  font-weight:800;
+}
+
+.authBox .field input{
+  width:100%;
+  min-height:46px;
+  box-sizing:border-box;
+  border:1px solid #d4e2dc;
+  border-radius:11px;
+  background:#f9fcfa;
+  color:#18372d;
+  padding:11px 13px;
+  font-size:14px;
+  outline:none;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease,
+    transform .2s ease;
+}
+
+.authBox .field input:hover{
+  border-color:#9ac8b7;
+  background:#fff;
+}
+
+.authBox .field input:focus{
+  border-color:#16a34a;
+  background:#fff;
+  box-shadow:
+    0 0 0 4px rgba(22,163,74,.10),
+    0 5px 14px rgba(6,78,59,.07);
+}
+
+/* Password wrapper */
+
+.tvPasswordWrap{
+  position:relative;
+}
+
+.tvPasswordWrap input{
+  padding-right:48px !important;
+}
+
+.tvPasswordToggle{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#647b72;
+  cursor:pointer;
+  font-size:16px;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    transform .18s ease;
+}
+
+.tvPasswordToggle:hover{
+  background:#eaf7f0;
+  color:#064e3b;
+}
+
+.tvPasswordToggle:active{
+  transform:translateY(-50%) scale(.92);
+}
+
+/* Main auth buttons - 3D */
+
+.authBox .actions{
+  margin-top:17px;
+}
+
+.authBox .actions button.primary{
+  min-height:48px;
+  border:0 !important;
+  border-radius:11px !important;
+  background:linear-gradient(135deg,#064e3b,#07845c) !important;
+  color:#fff !important;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:
+    0 5px 0 #043c2d,
+    0 10px 22px rgba(6,78,59,.22);
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    filter .16s ease;
+}
+
+.authBox .actions button.primary:hover{
+  filter:brightness(1.07);
+  transform:translateY(-2px);
+  box-shadow:
+    0 7px 0 #043c2d,
+    0 14px 28px rgba(6,78,59,.27);
+}
+
+.authBox .actions button.primary:active{
+  transform:translateY(4px);
+  box-shadow:
+    0 1px 0 #043c2d,
+    0 4px 10px rgba(6,78,59,.16);
+}
+
+.authBox .actions button.primary:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* Remember me */
+
+.authRemember{
+  user-select:none;
+  cursor:pointer;
+  padding:7px 0;
+}
+
+.authRemember input{
+  accent-color:#07845c;
+}
+
+/* Links */
+
+.authLinks{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:15px;
+}
+
+.authLinks button{
+  border:0;
+  background:transparent;
+  color:#087f5b;
+  cursor:pointer;
+  font-weight:800;
+  font-size:12px;
+  padding:6px 8px;
+  border-radius:7px;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    transform .18s ease;
+}
+
+.authLinks button:hover{
+  color:#064e3b;
+  background:#edf8f2;
+  transform:translateY(-1px);
+}
+
+/* Messages */
+
+.authError{
+  min-height:20px;
+  margin-top:11px;
+  padding:0;
+  font-size:12px;
+  line-height:1.45;
+  color:#b42318;
+}
+
+.authHint{
+  margin-top:17px;
+  padding:10px 12px;
+  border:1px solid #dcece5;
+  border-radius:9px;
+  background:#f4faf7;
+  color:#64776f;
+  font-size:10px;
+  line-height:1.5;
+  text-align:center;
+}
+
+/* Mobile */
+
+@media(max-width:520px){
+  .authOverlay{
+    padding:12px;
+  }
+
+  .authBox{
+    width:100%;
+    padding:25px 18px;
+    border-radius:19px;
+  }
+
+  .authBrand img{
+    width:64px;
+    height:64px;
+  }
+
+  .authBrand h2{
+    font-size:22px;
+  }
+
+  .authTabs button{
+    padding:10px 7px;
+    font-size:12px;
+  }
+}
+
+@media(max-width:360px){
+  .authBox{
+    padding:22px 14px;
+  }
+
+  .authBrand h2{
+    font-size:20px;
+  }
+}
 
 body.theme-darkgreen .field input,body.theme-darkgreen .field select,body.theme-darkgreen .field textarea,body.theme-darkgreen .lang select{background:#081a14;color:#e8f5ef;border-color:#2d5547;}
 body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
@@ -374,6 +737,184 @@ body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
   .msSchool h1{
     font-size:16px;
   }
+}
+/* ===== TRAVO VISTA AUTH BUTTON + PASSWORD FIX ===== */
+
+.authBox .tvPasswordWrap{
+  position:relative;
+  width:100%;
+  display:block;
+}
+
+.authBox .tvPasswordWrap input{
+  width:100%;
+  min-height:48px;
+  box-sizing:border-box;
+  padding:12px 48px 12px 13px !important;
+}
+
+.authBox .tvPasswordToggle{
+  position:absolute !important;
+  right:8px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+
+  width:34px !important;
+  height:34px !important;
+  min-width:34px !important;
+  padding:0 !important;
+  margin:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border:0 !important;
+  border-radius:8px !important;
+  background:transparent !important;
+  color:#527066 !important;
+
+  cursor:pointer !important;
+  z-index:5 !important;
+}
+
+.authBox .tvPasswordToggle:hover{
+  background:#eaf7f0 !important;
+  color:#064e3b !important;
+  transform:translateY(-50%) scale(1.05) !important;
+}
+
+.authBox .tvPasswordToggle:active{
+  transform:translateY(-50%) scale(.92) !important;
+}
+
+.authBox .tvPasswordToggle svg{
+  width:18px !important;
+  height:18px !important;
+  display:block !important;
+}
+
+
+/* ===== PREMIUM 3D AUTH BUTTONS ===== */
+
+.authBox .actions button.primary{
+  position:relative !important;
+  width:100% !important;
+  min-height:50px !important;
+
+  border:0 !important;
+  border-radius:12px !important;
+
+  background:linear-gradient(
+    135deg,
+    #064e3b 0%,
+    #087f5b 55%,
+    #16a34a 100%
+  ) !important;
+
+  color:#fff !important;
+
+  font-size:14px !important;
+  font-weight:800 !important;
+  letter-spacing:.25px !important;
+
+  cursor:pointer !important;
+
+  box-shadow:
+    0 5px 0 #043c2d,
+    0 10px 22px rgba(6,78,59,.25) !important;
+
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    filter .16s ease !important;
+}
+.authBox .actions button.primary{
+  box-shadow:
+    0 2px 0 #043c2d,
+    0 5px 12px rgba(6,78,59,.16) !important;
+}
+
+
+.authBox .actions button.primary:hover{
+  filter:brightness(1.05) !important;
+
+  transform:translateY(-1.5px) !important;
+
+  box-shadow:
+    0 3px 0 #043c2d,
+    0 7px 15px rgba(6,78,59,.20) !important;
+}
+
+.authBox .actions button.primary:active{
+  transform:translateY(1px) !important;
+
+  box-shadow:
+    0 1px 0 #043c2d,
+    0 4px 10px rgba(6,78,59,.18) !important;
+}
+
+.authBox .actions button.primary:disabled{
+  opacity:.65 !important;
+  cursor:not-allowed !important;
+  transform:none !important;
+}
+
+
+/* ===== LOGIN / CREATE ACCOUNT TAB BUTTONS ===== */
+
+.authBox .authTabs button{
+  position:relative !important;
+  cursor:pointer !important;
+
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    background .16s ease,
+    color .16s ease !important;
+}
+
+.authBox .authTabs button:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 3px 8px rgba(6,78,59,.10) !important;
+}
+
+.authBox .authTabs button.active{
+  box-shadow:
+    0 2px 0 #043c2d,
+    0 5px 10px rgba(6,78,59,.15) !important;
+
+  transform:translateY(-1px) !important;
+}
+
+.authBox .authTabs button.active:active{
+  transform:translateY(1px) !important;
+
+  box-shadow:
+    0 1px 0 #043c2d,
+    0 3px 6px rgba(6,78,59,.12) !important;
+}
+
+
+/* ===== FORGOT PASSWORD / LOGIN LINKS ===== */
+
+.authBox .authLinks button{
+  cursor:pointer !important;
+
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    color .16s ease !important;
+}
+
+.authBox .authLinks button:hover{
+  transform:translateY(-2px) !important;
+  background:#edf8f2 !important;
+  color:#064e3b !important;
+}
+
+.authBox .authLinks button:active{
+  transform:translateY(1px) !important;
 }
 </style></head><body><button class="mobileMenuBtn" id="mobileMenuBtn" onclick="toggleMobileSidebar()">☰</button><div class="app"><aside class="sidebar"><div class="brand"><img id="appLogo" src="icon.ico"><div><b>Travo Vista Group</b><span>Madrasa Management System</span></div></div><div class="nav" id="nav"></div></aside><main class="main"><div class="top"><div><button id="backBtn" class="secondary navBackTop" onclick="backPage()" style="display:none;margin-bottom:8px">← Back</button><h1 id="pageTitle"></h1><div class="muted" id="schoolTop"></div></div><div class="userBadge"><button class="secondary" onclick="downloadBackup()">💾 Backup</button><button class="secondary" onclick="excelExportModal()">📊 Excel Export</button><span id="loggedUser" class="mini"></span><button class="secondary" onclick="myAccountModal()">👤 My Account</button><button class="logout" onclick="logout()">🚪 Logout</button><button class="themeToggle" id="themeBtn" onclick="themeModal()">🎨 Themes</button><select id="lang" onchange="setLang(this.value)"><option value="en">English</option><option value="hi">हिन्दी</option><option value="ur">اردو</option></select></div></div><div id="content"></div></main></div><div class="mobileSidebarOverlay" id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div><div id="modal" class="modal hidden"></div><div id="toast" class="toast hidden"></div><div id="authOverlay" class="authOverlay hidden"></div>
 <script src=js/core/core.js></script>
