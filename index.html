@@ -1066,7 +1066,10 @@ async function importStaffFromExcel(){const input=document.getElementById('staff
 
 function staffModal(i=null){const a=get(keys.staff,[]),x=i==null?{}:a[i],d=getRules();modal(`<div class="modalHead"><h2>${i==null?t('addStaff'):t('edit')}</h2><button class="close" onclick="closeModal()">×</button></div><form onsubmit="saveStaff(event,${i==null?-1:i})"><div class="grid"><div class="field"><label>${t('employee')} *</label><input name="employee" value="${esc(x.employee)}" required></div><div class="field"><label>${t('staffName')} *</label><input name="name" value="${esc(x.name)}" required></div><div class="field"><label>${t('designation')}</label><input name="designation" value="${esc(x.designation)}"></div><div class="field"><label>${t('subject')}</label><input name="subject" value="${esc(x.subject)}"></div><div class="field"><label>${t('qualification')}</label><input name="qualification" value="${esc(x.qualification)}"></div><div class="field"><label>${t('joining')}</label><input name="joining" type="date" value="${esc(x.joining)}"></div><div class="field"><label>${t('salaryAmt')}</label><input name="salary" type="number" value="${esc(x.salary)}"></div><div class="field"><label>${t('phone')}</label><input name="phone" value="${esc(x.phone)}"></div><div class="field"><label>Login ID</label><input name="loginId" value="${esc(x.loginId||'')}" placeholder="staff01"></div><div class="field"><label>Role</label><select name="role"><option ${x.role==='Teacher'?'selected':''}>Teacher</option><option ${x.role==='Accountant'?'selected':''}>Accountant</option><option ${x.role==='Receptionist'?'selected':''}>Receptionist</option></select></div><div class="field"><label>Login Password</label><input name="loginPassword" type="password" value="" placeholder="Set password for future login"></div><div class="field"><label>${t('status')}</label><select name="status"><option ${x.status!=='Inactive'?'selected':''}>Active</option><option ${x.status==='Inactive'?'selected':''}>Inactive</option></select></div>${d.staffAadhaar!==false?docField('staffAadhaar','Aadhaar Card',!!d.staffAadhaarRequired):''}${d.staffQualification!==false?docField('staffQualificationDoc','Qualification Document',!!d.staffQualificationRequired):''}${d.staffOther!==false?docField('staffOtherDocuments','Other Documents',!!d.staffOtherRequired):''}</div><div class="actions"><button class="primary">${t('save')}</button><button type="button" class="secondary" onclick="closeModal()">${t('cancel')}</button></div></form>`)}
 
-async function saveStaff(e,i){e.preventDefault();try{const a=get(keys.staff,[]),fd=new FormData(e.target),x=Object.fromEntries(fd.entries());for(const [k,v] of fd.entries())if(v instanceof File&&v.size)x[k]=await fileToData(v);else if(v instanceof File)x[k]='';const loginId=String(x.loginId||'').trim();if(loginId&&a.some((v,j)=>j!==i&&String(v.loginId||'').trim().toLowerCase()===loginId.toLowerCase()))return alert('Login ID already exists.');if(x.loginPassword){x.loginPasswordHash=hashPassword(x.loginPassword);delete x.loginPassword}else if(i>=0){x.loginPasswordHash=a[i].loginPasswordHash||'';delete x.loginPassword}if(i<0)a.push(x);else a[i]={...a[i],...x};put(keys.staff,a);closeModal();toast();render()}catch(err){console.error('STAFF SAVE ERROR:',err);alert('Staff save failed: '+(err?.message||'Please try again.'))}}
+async function saveStaff(e,i){e.preventDefault();try{const a=get(keys.staff,[]),fd=new FormData(e.target),x=Object.fromEntries(fd.entries());for(const [k,v] of fd.entries())if(v instanceof File&&v.size)x[k]=await fileToData(v);else if(v instanceof File)x[k]='';const loginId=String(x.loginId||'').trim();if(loginId&&a.some((v,j)=>j!==i&&String(v.loginId||'').trim().toLowerCase()===loginId.toLowerCase()))return alert('Login ID already exists.');if(x.loginPassword){
+  x.loginPasswordHash=await hashPassword(x.loginPassword);
+  delete x.loginPassword;
+}else if(i>=0){x.loginPasswordHash=a[i].loginPasswordHash||'';delete x.loginPassword}if(i<0)a.push(x);else a[i]={...a[i],...x};put(keys.staff,a);closeModal();toast();render()}catch(err){console.error('STAFF SAVE ERROR:',err);alert('Staff save failed: '+(err?.message||'Please try again.'))}}
 function formBuilder(c){const fs=get(keys.formFields,[]),d=get(keys.documentRules,{});const toggle=(k,label)=>`<div style="display:flex;align-items:center;gap:10px;margin:9px 0"><input type="checkbox" ${d[k]!==false?'checked':''} onchange="setDocRule('${k}','enabled',this.checked)"><span>${label}</span><label style="margin-left:auto"><input type="checkbox" ${d[k+'Required']?'checked':''} onchange="setDocRule('${k}','required',this.checked)"> Mandatory</label></div>`;c.innerHTML=`<div class="section"><div class="toolbar"><h2>Form Builder</h2><button class="primary" onclick="customFieldModal()">+ Add Custom Field</button></div><p class="muted">Admission aur Staff forms mein fields add karein aur documents ko Mandatory/Optional set karein.</p><div class="grid"><div class="card"><h3>Student Documents</h3>${toggle('studentAadhaar','Aadhaar Card')}${toggle('studentBirth','Birth Certificate')}${toggle('studentOther','Other Documents')}</div><div class="card"><h3>Staff Documents</h3>${toggle('staffAadhaar','Aadhaar Card')}${toggle('staffQualification','Qualification Document')}${toggle('staffOther','Other Documents')}</div></div></div><div class="section"><h2>Custom Fields</h2><div class="tablewrap"><table class="table"><thead><tr><th>Form</th><th>Field</th><th>Type</th><th>Required</th><th></th></tr></thead><tbody>${fs.map((f,i)=>`<tr><td>${f.area==='student'?'Admission':'Staff'}</td><td>${esc(f.label)}</td><td>${esc(f.type)}</td><td>${f.required?'Yes':'No'}</td><td><button class="secondary" onclick="customFieldModal(${i})">Edit</button> <button class="danger" onclick="deleteCustomField(${i})">Delete</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">No custom fields.</td></tr>'}</tbody></table></div></div>`}
 function setDocRule(k,type,v){const d=get(keys.documentRules,{});d[k+(type==='required'?'Required':'')]=v;put(keys.documentRules,d);render()}
 function customFieldModal(i=null){const a=get(keys.formFields,[]),x=i==null?{}:a[i];modal(`<div class="modalHead"><h2>${i==null?'Add Custom Field':'Edit Custom Field'}</h2><button class="close" onclick="closeModal()">×</button></div><form onsubmit="saveCustomField(event,${i==null?-1:i})"><div class="grid"><div class="field"><label>Form *</label><select name="area" required><option value="student">Admission</option><option value="staff">Staff</option></select></div><div class="field"><label>Field Label *</label><input name="label" value="${esc(x.label)}" required></div><div class="field"><label>Field Key *</label><input name="key" value="${esc(x.key)}" required></div><div class="field"><label>Type</label><select name="type"><option>text</option><option>date</option><option>number</option><option>textarea</option><option>select</option><option>file</option></select></div><div class="field"><label>Options (select)</label><input name="options" value="${esc(x.options)}" placeholder="Option 1|Option 2"></div><div class="field"><label><input type="checkbox" name="required" ${x.required?'checked':''}> Mandatory</label></div></div><div class="actions"><button class="primary">Save</button><button type="button" class="secondary" onclick="closeModal()">Cancel</button></div></form>`)}
@@ -1348,14 +1351,228 @@ async function downloadBackup(){const u=currentUser();if(!(u?.type==='admin'||u?
 async function autoBackupSilent(){try{if(!window.tvgs?.autoBackup)return;await window.tvgs.autoBackup(collectBackupData())}catch(e){console.warn('AUTO BACKUP:',e)}}
 async function restoreBackup(){const u=currentUser();if(!(u?.type==='admin'||u?.role==='Administrator'))return alert('Only Administrator can restore backups.');try{let d=null;if(window.tvgs?.chooseRestoreBackup){d=await window.tvgs.chooseRestoreBackup()}else{const f=document.getElementById('restoreInput')?.files?.[0];if(!f)return alert('Please select a backup file.');d=JSON.parse(await f.text())}if(!d?.data)throw new Error('Invalid backup file.');if(!confirm('Restore this backup? Existing local data will be replaced where backup data exists.'))return;Object.entries(keys).forEach(([k,key])=>{if(Object.prototype.hasOwnProperty.call(d.data,k))put(key,d.data[k])});toast('Data restored successfully');render();}catch(e){alert('Restore failed: '+(e?.message||'Invalid backup file.'))}}
 
-function hashPassword(v){if(window.tvgs&&typeof window.tvgs.hashPassword==='function')return window.tvgs.hashPassword(String(v));throw new Error('Secure password service is unavailable. Please restart the application.')}
-function verifyPassword(stored,password){if(window.tvgs&&typeof window.tvgs.verifyPassword==='function')return !!window.tvgs.verifyPassword(String(password),String(stored||''));return hashPassword(password)===String(stored||'')}
+const TV_PASSWORD_ITERATIONS = 310000;
+
+function tvBytesToBase64(bytes){
+  let binary='';
+  const chunk=0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    binary+=String.fromCharCode(...bytes.subarray(i,i+chunk));
+  }
+  return btoa(binary);
+}
+
+function tvBase64ToBytes(base64){
+  const binary=atob(base64);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  return bytes;
+}
+
+async function browserHashPassword(password){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  const keyMaterial=await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(String(password)),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+
+  const bits=await crypto.subtle.deriveBits(
+    {
+      name:'PBKDF2',
+      salt,
+      iterations:TV_PASSWORD_ITERATIONS,
+      hash:'SHA-256'
+    },
+    keyMaterial,
+    256
+  );
+
+  return 'pbkdf2$sha256$'+
+    TV_PASSWORD_ITERATIONS+'$'+
+    tvBytesToBase64(salt)+'$'+
+    tvBytesToBase64(new Uint8Array(bits));
+}
+async function hashPassword(v){
+  return await browserHashPassword(String(v));
+}
+
+async function verifyPassword(stored,password){
+  const raw=String(stored||'');
+
+  if(window.tvgs&&typeof window.tvgs.verifyPassword==='function'){
+    return !!(await window.tvgs.verifyPassword(
+      String(password),
+      raw
+    ));
+  }
+
+  const parts=raw.split('$');
+
+  if(parts.length!==5||parts[0]!=='pbkdf2'||parts[1]!=='sha256'){
+    return false;
+  }
+
+  const iterations=Number(parts[2]);
+
+  if(!Number.isSafeInteger(iterations)||iterations<1||iterations>10000000){
+    return false;
+  }
+
+  try{
+    const salt=tvBase64ToBytes(parts[3]);
+    const expected=tvBase64ToBytes(parts[4]);
+
+    if(salt.length!==16||expected.length!==32)return false;
+
+    const keyMaterial=await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(String(password)),
+      'PBKDF2',
+      false,
+      ['deriveBits']
+    );
+
+    const bits=await crypto.subtle.deriveBits(
+      {
+        name:'PBKDF2',
+        salt,
+        iterations,
+        hash:'SHA-256'
+      },
+      keyMaterial,
+      256
+    );
+
+    const actual=new Uint8Array(bits);
+
+    let difference=0;
+    for(let i=0;i<expected.length;i++){
+      difference|=actual[i]^expected[i];
+    }
+
+    return difference===0;
+
+  }catch(err){
+    console.error('PASSWORD VERIFY ERROR:',err);
+    return false;
+  }
+}
+
 function upgradeLegacyHash(stored,password){const raw=String(stored||'');return raw&&!raw.startsWith('pbkdf2$')?hashPassword(password):raw}
 function authOverlay(mode='login'){const a=get(keys.auth,null),box=document.getElementById('authOverlay');if(!box)return;box.classList.remove('hidden');const wantSignup=mode==='signup'||!a;if(wantSignup){box.innerHTML=`<div class="authBox"><div class="authBrand"><img src="icon.ico"><h2>Create Administrator Account</h2><p>Travo Vista Group – Madrasa Management System</p></div><div class="authTabs"><button class="active">Create Account</button></div><form onsubmit="doSignup(event)"><div class="field"><label>Admin Name</label><input name="name" required autofocus></div><div class="field" style="margin-top:12px"><label>Email or Phone Number</label><input name="identifier" required autocomplete="username"></div><div class="field" style="margin-top:12px"><label>Password</label><input name="password" type="password" minlength="6" required autocomplete="new-password"></div><div class="field" style="margin-top:12px"><label>Confirm Password</label><input name="confirm" type="password" minlength="6" required autocomplete="new-password"></div><div id="authMsg" class="authError"></div><div class="actions"><button class="primary" style="width:100%">Create Administrator Account</button></div></form><div class="authLinks"><button type="button" onclick="authOverlay('login')">Already have an account? Login</button></div><div class="authHint">Administrator and staff accounts are secured online for this organization.</div></div>`;return}box.innerHTML=`<div class="authBox"><div class="authBrand"><img src="icon.ico"><h2>Welcome Back</h2><p>Travo Vista Group – Madrasa Management System</p></div><div class="authTabs"><button class="active">Login</button><button type="button" onclick="authOverlay('signup')" style="margin-left:8px">Create Account</button></div><form onsubmit="doLogin(event)"><div class="field"><label>Email or Phone Number / Staff Login ID</label><input name="identifier" required autocomplete="username" autofocus></div><div class="field" style="margin-top:12px"><label>Password</label><input name="password" type="password" required autocomplete="current-password"></div><label class="authRemember"><input type="checkbox" name="remember"> Remember Me</label><div id="authMsg" class="authError"></div><div class="actions"><button type="submit" class="primary" style="width:100%">Login</button></div></form><div class="authLinks"><button type="button" onclick="forgotPassword()">Forgot Password?</button><span></span></div><div class="authHint">Administrator and staff accounts are secured online for this organization.</div></div>`}
 function forgotPassword(){if(confirm('Forgot administrator password? This will reset only the Administrator account. Student, fee, attendance and other data will NOT be deleted. You can then create a new Administrator account.')){localStorage.removeItem(keys.auth);localStorage.removeItem(keys.currentUser);sessionStorage.removeItem('tvgsLoggedIn');authOverlay('signup');const m=document.getElementById('authMsg');if(m)m.textContent='Administrator account reset. Please create a new account.'}}
 function finishLogin(user,remember){put(keys.currentUser,user);sessionStorage.tvgsLoggedIn='1';if(remember)localStorage.setItem('tvgsRememberId',String(user.identifier||''));else localStorage.removeItem('tvgsRememberId');if(remember)localStorage.setItem('tvgsRemember','1');else localStorage.removeItem('tvgsRemember');const box=document.getElementById('authOverlay');if(box)box.classList.add('hidden');render()}
-function doSignup(e){e.preventDefault();const msg=document.getElementById('authMsg');try{const f=new FormData(e.target),name=String(f.get('name')||'').trim(),identifier=String(f.get('identifier')||'').trim(),password=String(f.get('password')||''),confirm=String(f.get('confirm')||'');if(!name||!identifier){msg.textContent='Please complete all required fields.';return}if(password.length<6){msg.textContent='Password must be at least 6 characters.';return}if(password!==confirm){msg.textContent='Passwords do not match.';return}const passwordHash=hashPassword(password);put(keys.auth,{name,identifier,passwordHash,role:'Administrator',createdAt:new Date().toISOString()});finishLogin({name,identifier,role:'Administrator',type:'admin'})}catch(err){console.error(err);msg.textContent='Unable to create account: '+(err?.message||'Unknown error')}}
-function doLogin(e){e.preventDefault();const msg=document.getElementById('authMsg');try{const f=new FormData(e.target),remember=f.get('remember')==='on',identifier=String(f.get('identifier')||'').trim().toLowerCase(),password=String(f.get('password')||''),a=get(keys.auth,null);if(a&&String(a.identifier||'').trim().toLowerCase()===identifier&&verifyPassword(a.passwordHash,password)){if(String(a.passwordHash||'').startsWith('pbkdf2$')===false){a.passwordHash=hashPassword(password);put(keys.auth,a)}finishLogin({name:a.name,identifier:a.identifier,role:'Administrator',type:'admin'});return}const staff=get(keys.staff,[]).find(x=>x.status!=='Inactive'&&String(x.loginId||'').trim().toLowerCase()===identifier&&x.loginPasswordHash&&verifyPassword(x.loginPasswordHash,password));if(staff){if(!String(staff.loginPasswordHash||'').startsWith('pbkdf2$')){const all=get(keys.staff,[]),i=all.findIndex(x=>x.employee===staff.employee);if(i>=0){all[i].loginPasswordHash=hashPassword(password);put(keys.staff,all)}}finishLogin({name:staff.name,identifier:staff.loginId,role:staff.role||'Teacher',type:'staff',employee:staff.employee});return}msg.textContent='Invalid login ID, email/phone, or password.'}catch(err){console.error(err);msg.textContent='Unable to verify login: '+(err?.message||'Unknown error')}}
+async function doSignup(e){
+  e.preventDefault();
+  const msg=document.getElementById('authMsg');
+
+  try{
+    const f=new FormData(e.target);
+    const name=String(f.get('name')||'').trim();
+    const identifier=String(f.get('identifier')||'').trim();
+    const password=String(f.get('password')||'');
+    const confirm=String(f.get('confirm')||'');
+
+    if(!name||!identifier){
+      msg.textContent='Please complete all required fields.';
+      return;
+    }
+
+    if(password.length<6){
+      msg.textContent='Password must be at least 6 characters.';
+      return;
+    }
+
+    if(password!==confirm){
+      msg.textContent='Passwords do not match.';
+      return;
+    }
+
+    const passwordHash=await hashPassword(password);
+
+    put(keys.auth,{
+      name,
+      identifier,
+      passwordHash,
+      role:'Administrator',
+      createdAt:new Date().toISOString()
+    });
+
+    finishLogin({
+      name,
+      identifier,
+      role:'Administrator',
+      type:'admin'
+    });
+
+  }catch(err){
+    console.error(err);
+    msg.textContent='Unable to create account: '+(err?.message||'Unknown error');
+  }
+}
+
+
+async function doLogin(e){
+  e.preventDefault();
+  const msg=document.getElementById('authMsg');
+
+  try{
+    const f=new FormData(e.target);
+    const remember=f.get('remember')==='on';
+    const identifier=String(f.get('identifier')||'').trim().toLowerCase();
+    const password=String(f.get('password')||'');
+    const a=get(keys.auth,null);
+
+    if(
+      a &&
+      String(a.identifier||'').trim().toLowerCase()===identifier &&
+      await verifyPassword(a.passwordHash,password)
+    ){
+      finishLogin({
+        name:a.name,
+        identifier:a.identifier,
+        role:'Administrator',
+        type:'admin'
+      },remember);
+      return;
+    }
+
+    const staffList=get(keys.staff,[]);
+    let staff=null;
+
+    for(const x of staffList){
+      if(
+        x.status!=='Inactive' &&
+        String(x.loginId||'').trim().toLowerCase()===identifier &&
+        x.loginPasswordHash &&
+        await verifyPassword(x.loginPasswordHash,password)
+      ){
+        staff=x;
+        break;
+      }
+    }
+
+    if(staff){
+      finishLogin({
+        name:staff.name,
+        identifier:staff.loginId,
+        role:staff.role||'Teacher',
+        type:'staff',
+        employee:staff.employee
+      },remember);
+      return;
+    }
+
+    msg.textContent='Invalid login ID, email/phone, or password.';
+
+  }catch(err){
+    console.error(err);
+    msg.textContent='Unable to verify login: '+(err?.message||'Unknown error');
+  }
+}
 function logout(){sessionStorage.removeItem('tvgsLoggedIn');if(localStorage.getItem('tvgsRemember')!=='1')localStorage.removeItem(keys.currentUser);authOverlay('login')}
 function showResetAdmin(){if(confirm('Reset only the administrator account? School data and staff records will NOT be deleted.')){localStorage.removeItem(keys.auth);localStorage.removeItem(keys.currentUser);sessionStorage.removeItem('tvgsLoggedIn');authOverlay();const m=document.getElementById('authMsg');if(m)m.textContent='Administrator account reset. Please create a new account.'}}
 function initAuth(){const logged=sessionStorage.tvgsLoggedIn==='1'&&currentUser();if(logged)return;const remembered=localStorage.getItem('tvgsRemember')==='1'&&currentUser();if(remembered){sessionStorage.tvgsLoggedIn='1';render();return}authOverlay('login')}

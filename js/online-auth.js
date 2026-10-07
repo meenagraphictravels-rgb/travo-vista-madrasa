@@ -262,7 +262,7 @@ window.authOverlay=function(mode='login'){
   `;
 
   document.getElementById('onlineAuthForm').onsubmit=
-    signup ? window.doSignup : window.doLogin;
+    signup ? window.doSignup : window.supabaseDoLogin;
 };
 
 
@@ -336,7 +336,7 @@ window.doSignup=async function(e){
 };
 
 
-window.doLogin=async function(e){
+window.supabaseDoLogin=async function(e){
   e.preventDefault();
 
   msg('Signing in...');
