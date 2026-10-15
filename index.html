@@ -441,10 +441,23 @@ body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
     transition:transform .25s ease;
   }
 
+  
   /* Sidebar open */
   body.mobileSidebarOpen .sidebar{
     transform:translateX(0);
   }
+
+  /* Urdu: sidebar opens from the right */
+  body.rtl .sidebar{
+    left:auto;
+    right:0;
+    transform:translateX(100%);
+  }
+
+  body.rtl.mobileSidebarOpen .sidebar{
+    transform:translateX(0);
+  }
+
 
   /* Dark overlay behind sidebar */
   .mobileSidebarOverlay{
@@ -481,6 +494,12 @@ body.theme-darkgreen .table th{background:#081a14;color:#cfe8dd;}
     font-size:22px;
     cursor:pointer;
     box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+  
+  /* Urdu: move menu button to the right */
+  body.rtl .mobileMenuBtn{
+    left:auto;
+    right:10px;
   }
 
   /* Header */
@@ -949,9 +968,9 @@ function nav(){
   {title:'RESULTS & DOCUMENTS',items:[['results','📋'],['tc','📄'],['reports','📈']]},
   {title:'MADRASA MANAGEMENT',items:[['mIncome','💰'],['mRaseed','🧾'],['mBoxes','📦'],['mHostel','🛏️'],['mLibrary','📚']]},{title:'ADMINISTRATION',items:[['admin','🛡️'],['formBuilder','🧩'],['settings','⚙️']]}
  ];
- document.getElementById('nav').innerHTML=groups.map(g=>{const items=g.items.filter(([k])=>roleAllowed(k));return items.length?`<div style="padding:14px 12px 5px;font-size:10px;letter-spacing:.8px;opacity:.55;font-weight:700">${g.title}</div>`+items.map(([k,i])=>`<button class="${page===k?'active':''}" onclick="go('${k}')">${i} ${t(k)}</button>`).join(''):''}).join('')
+ document.getElementById('nav').innerHTML=groups.map(g=>{const items=g.items.filter(([k])=>roleAllowed(k));return items.length?`<div style="padding:14px 12px 5px;font-size:10px;letter-spacing:.8px;opacity:.55;font-weight:700">${g.title}</div>`+items.map(([k,i])=>`<button class="${page===k?'active':''}" onclick="go('${k}');closeMobileSidebar()">${i} ${t(k)}</button>`).join(''):''}).join('')
 }
-function go(p){if(!roleAllowed(p)){toast('Access denied');return}if(p==='dashboard'){pageHistory=['dashboard'];page='dashboard';render();return}if(p!==page){pageHistory=pageHistory.filter((v,i)=>i===0||v!==p);pageHistory.push(p)}page=p;render()};function backPage(){if(pageHistory.length>1){pageHistory.pop();page=pageHistory[pageHistory.length-1];render()}else{page='dashboard';pageHistory=['dashboard'];render()}};function toast(msg=t('saved')){const x=document.getElementById('toast');x.textContent=msg;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),1800)}
+function go(p){closeMobileSidebar();if(!roleAllowed(p)){toast('Access denied');return}if(p==='dashboard'){pageHistory=['dashboard'];page='dashboard';render();return}if(p!==page){pageHistory=pageHistory.filter((v,i)=>i===0||v!==p);pageHistory.push(p)}page=p;render()};function backPage(){if(pageHistory.length>1){pageHistory.pop();page=pageHistory[pageHistory.length-1];render()}else{page='dashboard';pageHistory=['dashboard'];render()}};function toast(msg=t('saved')){const x=document.getElementById('toast');x.textContent=msg;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),1800)}
 function applyTheme(name){const names=['theme-teal','theme-bluegreen','theme-olive','theme-darkgreen','theme-royal','theme-sunset'];document.body.classList.remove(...names);const chosen=name||'green';if(chosen!=='green')document.body.classList.add(chosen);localStorage.setItem(keys.theme,chosen);const b=document.getElementById('themeBtn');if(b)b.textContent='🎨 Themes';document.documentElement.style.setProperty('--theme-active',chosen)}
 function initTheme(){const name=localStorage.getItem(keys.theme)||'green';applyTheme(name)}
 function themeModal(){const current=localStorage.getItem(keys.theme)||'green';modal(`<div class="modalHead"><h2>🎨 ${lang==='ur'?'تھیمز':lang==='hi'?'थीम्स':'Themes'}</h2><button class="close" onclick="closeModal()">×</button></div><p class="muted">${lang==='ur'?'اپنی پسند کی تھیم منتخب کریں۔':lang==='hi'?'अपनी पसंद की थीम चुनیں۔':'Choose your preferred theme.'}</p><div class="themeChoices"><button class="themeChoice" onclick="applyTheme('green');closeModal()"><div class="themeSwatch themeGreen"></div><b>Dark Green</b><div class="mini">Madrasa Green</div></button><button class="themeChoice" onclick="applyTheme('theme-teal');closeModal()"><div class="themeSwatch themeTeal"></div><b>Teal Green</b><div class="mini">Fresh & Professional</div></button><button class="themeChoice" onclick="applyTheme('theme-bluegreen');closeModal()"><div class="themeSwatch themeBlueGreen"></div><b>Blue Green</b><div class="mini">Modern</div></button><button class="themeChoice" onclick="applyTheme('theme-olive');closeModal()"><div class="themeSwatch themeOlive"></div><b>Olive Green</b><div class="mini">Natural</div></button><button class="themeChoice" onclick="applyTheme('theme-darkgreen');closeModal()"><div class="themeSwatch themeDark"></div><b>Dark Mode</b><div class="mini">Night Office</div></button><button class="themeChoice" onclick="applyTheme('theme-royal');closeModal()"><div class="themeSwatch" style="background:linear-gradient(135deg,#4c1d95,#a855f7)"></div><b>Royal Purple</b><div class="mini">Unique & Premium</div></button><button class="themeChoice" onclick="applyTheme('theme-sunset');closeModal()"><div class="themeSwatch" style="background:linear-gradient(135deg,#7c2d12,#fb923c)"></div><b>Sunset Copper</b><div class="mini">Warm & Elegant</div></button></div>`)}
